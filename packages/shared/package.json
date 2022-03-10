@@ -1,0 +1,40 @@
+{
+  "name": "@tracker/shared",
+  "version": "0.0.1",
+  "private": false,
+  "lib": true,
+  "description": "@tracker/shared",
+  "main": "index.js",
+  "module": "dist/shared.esm-bundler.js",
+  "types": "dist/shared.d.ts",
+  "sideEffects": false,
+  "author": "wermdany <https://github.com/wermdany>",
+  "license": "ISC",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "buildOptions": {
+    "name": "TrackerShared",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "cjs",
+      "global"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wermdany/tracker.git",
+    "directory": "packages/shared"
+  },
+  "bugs": {
+    "url": "https://github.com/wermdany/tracker/issues"
+  },
+  "homepage": "https://github.com/wermdany/tracker/tree/master/packages/shared#readme",
+  "keywords": [
+    "tracker",
+    "track"
+  ],
+  "dependencies": {}
+}

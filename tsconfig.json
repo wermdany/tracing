@@ -15,24 +15,27 @@
     "esModuleInterop": true,
     "removeComments": false,
     "jsx": "preserve",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
-    "types": [
-      "jest",
-      "node"
-    ],
+    "lib": ["ESNext", "DOM"],
+    "types": [],
     "rootDir": ".",
     "paths": {
-      "@vue/*": [
-        "packages/*/src"
-      ],
+      "@tracker/*": ["packages/*/src"]
     }
   },
-  "include": [
-    "packages/global.d.ts",
-    "packages/*/src",
-    "packages/*/__tests__",
+  "include": ["global.d.ts", "packages/*/src/**/*.ts"],
+  "exclude": [
+    "packages/**/*.test.ts",
+    "packages/**/*.spec.ts",
+    "scripts/*.ts",
+    "packages/example/*",
+    "packages/*/dist/*"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.build.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
   ]
 }

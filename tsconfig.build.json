@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "lib": ["ESNext"],
+    "types": ["node"]
+  },
+  "include": ["scripts/*.ts", "packages/*/src/**/scripts/*.ts", "package.json"]
+}

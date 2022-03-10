@@ -1,0 +1,43 @@
+{
+  "name": "@tracker/send",
+  "version": "0.0.1",
+  "private": false,
+  "lib": true,
+  "description": "@tracker/send",
+  "main": "index.js",
+  "module": "dist/send.esm-bundler.js",
+  "types": "dist/send.d.ts",
+  "sideEffects": false,
+  "author": "wermdany <https://github.com/wermdany>",
+  "license": "ISC",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "buildOptions": {
+    "name": "TrackerSend",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "cjs",
+      "global"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wermdany/tracker.git",
+    "directory": "packages/send"
+  },
+  "bugs": {
+    "url": "https://github.com/wermdany/tracker/issues"
+  },
+  "homepage": "https://github.com/wermdany/tracker/tree/master/packages/send#readme",
+  "keywords": [
+    "tracker",
+    "track"
+  ],
+  "dependencies": {
+    "@tracker/shared": "0.0.1",
+    "@tracker/core": "0.0.1"
+  }
+}

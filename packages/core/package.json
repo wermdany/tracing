@@ -1,0 +1,41 @@
+{
+  "name": "@tracker/core",
+  "version": "0.0.1",
+  "private": false,
+  "lib": true,
+  "description": "@tracker/core",
+  "main": "index.js",
+  "module": "dist/core.esm-bundler.js",
+  "types": "dist/core.d.ts",
+  "sideEffects": false,
+  "author": "wermdany <https://github.com/wermdany>",
+  "license": "ISC",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "buildOptions": {
+    "name": "TrackerCore",
+    "formats": [
+      "esm-bundler",
+      "cjs"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wermdany/tracker.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/wermdany/tracker/issues"
+  },
+  "homepage": "https://github.com/wermdany/tracker/tree/master/packages/core#readme",
+  "keywords": [
+    "tracker",
+    "track"
+  ],
+  "dependencies": {
+    "@tracker/shared": "0.0.1",
+    "@tracker/send": "0.0.1"
+  }
+}
