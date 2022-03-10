@@ -1,0 +1,36 @@
+{
+  "name": "@tracker/monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "preinstall": "esno ./scripts/preinstall.ts",
+    "bootstrap": "esno ./scripts/bootstrap.ts"
+  },
+  "author": "wermdany <https://github.com/wermdany>",
+  "license": "ISC",
+  "dependencies": {
+    "@rollup/plugin-replace": "^4.0.0",
+    "@types/fs-extra": "^9.0.13",
+    "@types/glob": "^7.2.0",
+    "@types/node": "*",
+    "chalk": "^5.0.1",
+    "enquirer": "^2.3.6",
+    "eslint": "^8.10.0",
+    "esno": "^0.14.1",
+    "execa": "^6.1.0",
+    "fs-extra": "^10.0.1",
+    "glob": "^7.2.0",
+    "husky": "^7.0.4",
+    "jest": "^27.5.1",
+    "lint-staged": "^12.3.5",
+    "minimist": "^1.2.5",
+    "prettier": "^2.5.1",
+    "rollup": "^2.70.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.31.2",
+    "semver": "^7.3.5",
+    "ts-jest": "^27.1.3",
+    "typescript": "^4.6.2"
+  }
+}
