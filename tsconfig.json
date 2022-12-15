@@ -14,28 +14,18 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "removeComments": false,
-    "jsx": "preserve",
     "lib": ["ESNext", "DOM"],
-    "types": [],
+    "types": ["jest"],
     "rootDir": ".",
     "paths": {
-      "@tracker/*": ["packages/*/src"]
+      "@collect/*": ["packages/*/src"]
     }
   },
-  "include": ["global.d.ts", "packages/*/src/**/*.ts"],
-  "exclude": [
-    "packages/**/*.test.ts",
-    "packages/**/*.spec.ts",
-    "scripts/*.ts",
-    "packages/example/*",
-    "packages/*/dist/*"
-  ],
+  "include": ["global.d.ts", "packages/*/src/**/*.ts", "test-utils/*"],
+  "exclude": ["scripts/*.ts", "playground/*", "packages/*/dist/*"],
   "references": [
     {
       "path": "./tsconfig.build.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
     }
   ]
 }

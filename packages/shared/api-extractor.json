@@ -3,5 +3,16 @@
   "mainEntryPointFilePath": "./dist/packages/<unscopedPackageName>/src/index.d.ts",
   "dtsRollup": {
     "publicTrimmedFilePath": "./dist/<unscopedPackageName>.d.ts"
+  },
+  "compiler": {
+    "overrideTsconfig": {
+      "compilerOptions": {
+        "baseUrl": "packages/shared/dist/",
+        "paths": {
+          "@collect/*": ["packages/*/src"]
+        }
+      },
+      "include": ["global.d.ts", "packages/*/src/**/*.ts"]
+    }
   }
 }

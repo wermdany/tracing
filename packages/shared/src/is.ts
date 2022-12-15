@@ -1,8 +1,6 @@
-import type { ObjectType } from "./typeUtils";
-
 const toString = Object.prototype.toString;
 
-const isType =
+export const isType =
   <T>(type: string | string[]) =>
   (obj: unknown): obj is T =>
     getType(obj) === `[object ${type}]`;
@@ -23,7 +21,10 @@ export const isNum = isType<number>("Number");
 
 export const isUndefined = isType<undefined>("Undefined");
 
-export const isObj = (value: unknown): value is ObjectType => value !== null && typeof value === "object";
+export const isDate = isType<Date>("Date");
+
+export const isObj = (value: unknown): value is Record<string, any> =>
+  value !== null && typeof value === "object";
 
 export function isElement(value: unknown): value is Element {
   return isObj(value) && value.nodeType === 1 && !isPlainObj(value);

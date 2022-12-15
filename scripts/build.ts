@@ -2,8 +2,8 @@
  * 此文件提供 rollup 打包
  */
 
+import path from "node:path";
 import minimist from "minimist";
-import path from "path";
 import fs from "fs-extra";
 import execa from "execa";
 import chalk from "chalk";
@@ -111,6 +111,7 @@ async function build(target: string) {
     const extractorResult = Extractor.invoke(extractorConfig, {
       localBuild: true,
       showVerboseMessages: true
+      // showDiagnostics: true // debug
     });
     if (extractorResult.succeeded) {
       const types = resolve("types");
@@ -151,5 +152,7 @@ async function build(target: string) {
     }
     // remove types cache
     removePreBuild(target, "packages");
+    // remove test-utils cache
+    removePreBuild(target, "test-utils");
   }
 }

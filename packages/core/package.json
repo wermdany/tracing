@@ -1,9 +1,9 @@
 {
-  "name": "@tracker/core",
+  "name": "@collect/core",
   "version": "0.0.1",
   "private": false,
   "lib": true,
-  "description": "@tracker/core",
+  "description": "@collect/core",
   "main": "index.js",
   "module": "dist/core.esm-bundler.js",
   "types": "dist/core.d.ts",
@@ -15,27 +15,28 @@
     "index.js"
   ],
   "buildOptions": {
-    "name": "TrackerCore",
+    "name": "collectCore",
     "formats": [
       "esm-bundler",
-      "cjs"
+      "esm-browser",
+      "cjs",
+      "global"
     ]
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wermdany/tracker.git",
+    "url": "git+https://github.com/wermdany/collect.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/wermdany/tracker/issues"
+    "url": "https://github.com/wermdany/collect/issues"
   },
-  "homepage": "https://github.com/wermdany/tracker/tree/master/packages/core#readme",
+  "homepage": "https://github.com/wermdany/collect/tree/master/packages/core#readme",
   "keywords": [
-    "tracker",
+    "collect",
     "track"
   ],
   "dependencies": {
-    "@tracker/shared": "0.0.1",
-    "@tracker/send": "0.0.1"
+    "@collect/shared": "0.0.1"
   }
 }

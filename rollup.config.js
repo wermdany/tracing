@@ -3,6 +3,8 @@ import ts from "rollup-plugin-typescript2";
 import replace from "@rollup/plugin-replace";
 import json from "@rollup/plugin-json";
 
+import { name as rootName } from "./package.json";
+
 if (!process.env.TARGET) {
   throw new Error("TARGET package must be specified via --environment flag.");
 }
@@ -41,7 +43,8 @@ const outputConfigs = {
 };
 
 const defaultFormats = ["esm-bundler", "cjs"];
-const packageFormats = packageOptions.formats || defaultFormats;
+const packageFormats =
+  packageOptions.formats && packageOptions.formats.length ? packageOptions.formats : defaultFormats;
 
 const packageBuildConfigs = packageFormats.map(format => createConfig(format, outputConfigs[format]));
 
@@ -102,11 +105,9 @@ function createConfig(format, output, plugins = []) {
     external,
     output: { banner: createBanner(), ...output },
     plugins: [
-      json({
-        namedExports: false
-      }),
+      json(),
       createTSPlugin(),
-      createReplacePlugin(isBundlerESMBuild, isBrowserESMBuild, isProduction),
+      createReplacePlugin(isBundlerESMBuild, isBrowserESMBuild, isGlobalBuild, isProduction),
       ...nodePlugins,
       ...plugins
     ]
@@ -128,13 +129,15 @@ function createTSPlugin() {
   });
 }
 
-function createReplacePlugin(isBundlerESMBuild, isBrowserESMBuild, isProduction) {
+function createReplacePlugin(isBundlerESMBuild, isBrowserESMBuild, isGlobalBuild, isProduction) {
   const replacements = {
     __VERSION__: `"${pkg.version}"`,
+    __NAME__: `"${rootName}"`,
     __TEST__: false,
     __DEV__: isBundlerESMBuild ? `(process.env.NODE_ENV !== 'production')` : JSON.stringify(!isProduction),
     __ESM_BUNDLER__: isBundlerESMBuild,
-    __ESM_BROWSER__: isBrowserESMBuild
+    __ESM_BROWSER__: isBrowserESMBuild,
+    __GLOBAL_BUILD__: isGlobalBuild
   };
   return replace({
     // @ts-ignore
@@ -144,12 +147,12 @@ function createReplacePlugin(isBundlerESMBuild, isBrowserESMBuild, isProduction)
 }
 
 function createBanner() {
-  const gitHash = require("execa").sync("git", ["rev-parse", "HEAD"]).stdout.substring(0, 7);
+  const gitHash = require("execa").sync("git", ["rev-parse", "HEAD"]).stdout;
   return `/*!
  * ${pkg.name} v${pkg.version}
  * (c) ${new Date().getFullYear()} ${pkg.author}
- * @license ${pkg.license}
- * gitHash ${gitHash}
+ * license ${pkg.license}
+ * hash ${gitHash}
  */\n`;
 }
 
@@ -161,7 +164,7 @@ function createProductionConfig(format) {
 }
 
 function createMinifiedConfig(format) {
-  const { terser } = require("rollup-plugin-terser");
+  const terser = require("@rollup/plugin-terser");
   return createConfig(
     format,
     {

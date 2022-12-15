@@ -1,0 +1,19 @@
+{
+  "extends": "../../api-extractor.json",
+  "mainEntryPointFilePath": "./dist/packages/track-collect/src/index.d.ts",
+  "dtsRollup": {
+    "publicTrimmedFilePath": "./dist/track-collect.d.ts"
+  },
+  "compiler": {
+    "overrideTsconfig": {
+      "compilerOptions": {
+        "baseUrl": "packages/track-collect/dist/",
+        "paths": {
+          "@collect/*": ["packages/*/src"]
+        }
+      },
+      "include": ["global.d.ts", "packages/*/src/**/*.ts"],
+      "exclude": ["test-utils/*"]
+    }
+  }
+}

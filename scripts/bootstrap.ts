@@ -7,7 +7,7 @@ import { rootJoin, toParseCase, globalExtensionsFile } from "./utils";
 import { prompt } from "enquirer";
 import chalk from "chalk";
 import rootPkg from "../package.json";
-import { join } from "path";
+import { join } from "node:path";
 import { sync as glob } from "glob";
 import execa from "execa";
 
@@ -100,7 +100,7 @@ async function genChildrenApp(obj: PromptResult) {
   // create package.json
   await outputFile(join(appPath, "package.json"), genPackageTemplate(obj, childrenName));
   // create api-extractor.json
-  await outputFile(join(appPath, "api-extractor.json"), genApiExtractorTemplate());
+  await outputFile(join(appPath, "api-extractor.json"), genApiExtractorTemplate(obj.name));
   // create README.md
   await outputFile(join(appPath, "README.md"), `# ${childrenName}\n`);
   // create index.js
@@ -126,14 +126,33 @@ function genGlobalExtensionPrefix() {
  */\n`;
 }
 
-function genApiExtractorTemplate() {
-  return `{
-  "extends": "../../api-extractor.json",
-  "mainEntryPointFilePath": "./dist/packages/<unscopedPackageName>/src/index.d.ts",
-  "dtsRollup": {
-    "publicTrimmedFilePath": "./dist/<unscopedPackageName>.d.ts"
-  }
-}\n`;
+function genApiExtractorTemplate(name: string) {
+  return (
+    JSON.stringify(
+      {
+        extends: "../../api-extractor.json",
+        mainEntryPointFilePath: `./dist/packages/${name}/src/index.d.ts`,
+        dtsRollup: {
+          publicTrimmedFilePath: `./dist/${name}.d.ts`
+        },
+        // why add this config ? see: https://github.com/microsoft/rushstack/issues/3510
+        compiler: {
+          overrideTsconfig: {
+            compilerOptions: {
+              baseUrl: `packages/${name}/dist/`,
+              paths: {
+                "@collect/*": ["packages/*/src"]
+              }
+            },
+            include: ["global.d.ts", "packages/*/src/**/*.ts"],
+            exclude: ["test-utils/*"]
+          }
+        }
+      },
+      null,
+      2
+    ) + "\n"
+  );
 }
 
 function genPackageTemplate(obj: PromptResult, childrenName: string) {

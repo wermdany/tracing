@@ -1,9 +1,9 @@
 {
-  "name": "@tracker/shared",
+  "name": "@collect/shared",
   "version": "0.0.1",
   "private": false,
   "lib": true,
-  "description": "@tracker/shared",
+  "description": "@collect/shared",
   "main": "index.js",
   "module": "dist/shared.esm-bundler.js",
   "types": "dist/shared.d.ts",
@@ -15,7 +15,7 @@
     "index.js"
   ],
   "buildOptions": {
-    "name": "TrackerShared",
+    "name": "collectShared",
     "formats": [
       "esm-bundler",
       "esm-browser",
@@ -25,15 +25,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wermdany/tracker.git",
+    "url": "git+https://github.com/wermdany/collect.git",
     "directory": "packages/shared"
   },
   "bugs": {
-    "url": "https://github.com/wermdany/tracker/issues"
+    "url": "https://github.com/wermdany/collect/issues"
   },
-  "homepage": "https://github.com/wermdany/tracker/tree/master/packages/shared#readme",
+  "homepage": "https://github.com/wermdany/collect/tree/master/packages/shared#readme",
   "keywords": [
-    "tracker",
+    "collect",
     "track"
   ],
   "dependencies": {}
