@@ -9,15 +9,20 @@ interface XhrResponseMap {
   text: string;
 }
 
+export enum XhrErrorEnum {
+  TimeOut = 1,
+  Abort,
+  Network,
+  Validator,
+  InvalidBuild
+}
+
 export interface XhrSenderConfig<T extends keyof XhrResponseMap = "json"> extends BaseSenderConfig {
   xhrTimeout: number;
   xhrMethods: "POST";
   xhrWithCredentials: boolean;
   xhrHeaders: Record<string, string>;
-  xhrValidateStatus: (
-    status: number,
-    response: T extends keyof XhrResponseMap ? XhrResponseMap[T] : never
-  ) => boolean;
+  xhrValidateStatus: (status: number) => boolean;
   xhrResponseType: T;
 }
 
@@ -35,14 +40,15 @@ const xhrConfig: XhrSenderConfig = {
   xhrResponseType: "json"
 };
 
-type CallBackFun = (build: Record<string, any>) => void;
+type ErrorCallBackFun = (build: Record<string, any>, code: XhrErrorEnum, request?: XMLHttpRequest) => void;
+type SuccessCallBackFun = (build: Record<string, any>) => void;
 
 export function createXhrSender(config?: Partial<XhrSenderConfig>) {
   const resolvedConfig: XhrSenderConfig = Object.assign(xhrConfig, config);
 
-  const xhr = (build: Record<string, any>, error: CallBackFun, success: CallBackFun) => {
-    if (!build) {
-      error(build);
+  const xhr = (build: Record<string, any>, error: ErrorCallBackFun, success: SuccessCallBackFun) => {
+    if (!build || typeof build != "object") {
+      error(build, XhrErrorEnum.InvalidBuild);
       return;
     }
 
@@ -65,46 +71,42 @@ export function createXhrSender(config?: Partial<XhrSenderConfig>) {
       }
     }
 
-    const clearRequest = () => {
-      request = null;
-    };
-
     const onloadend = () => {
       if (!request) return;
-
-      if (resolvedConfig.xhrValidateStatus(request.status, request.response)) {
+      if (resolvedConfig.xhrValidateStatus(request.status)) {
         success(build);
       } else {
-        error(build);
+        error(build, XhrErrorEnum.Validator, request);
       }
-      clearRequest();
+      request = null;
     };
 
     if ("onloadend" in request) {
       request.onloadend = onloadend;
+    } else {
+      // @ts-ignore
+      request.onreadystatechange = () => {
+        if (!request || request.readyState !== 4) return;
+        setTimeout(onloadend);
+      };
     }
 
-    request.onreadystatechange = () => {
-      if (!request || request.readyState !== 4) return;
-      setTimeout(onloadend);
-    };
-
     request.onabort = () => {
-      error(build);
-      clearRequest();
+      error(build, XhrErrorEnum.Abort, request!);
+      request = null;
     };
 
     request.onerror = () => {
-      error(build);
-      clearRequest();
+      error(build, XhrErrorEnum.Network, request!);
+      request = null;
     };
 
     request.ontimeout = () => {
-      error(build);
-      clearRequest();
+      error(build, XhrErrorEnum.TimeOut, request!);
+      request = null;
     };
 
-    const send = build ? JSON.stringify(build) : null;
+    const send = build !== undefined ? JSON.stringify(build) : null;
 
     request.send(send);
   };
@@ -118,6 +120,8 @@ const beaconConfig: BaseSenderConfig = {
   url: ""
 };
 
+type BeaconCallbackFun = (build: Record<string, any>) => void;
+
 export function createBeaconSender(collector: Collector, config: Partial<BaseSenderConfig>) {
   const logger = collector.logger;
   const isHasBeaconApi = navigator && "sendBeacon" in navigator;
@@ -126,9 +130,9 @@ export function createBeaconSender(collector: Collector, config: Partial<BaseSen
     return;
   }
 
-  const resolveConfig = Object.assign(beaconConfig, config);
+  const resolveConfig = { ...beaconConfig, ...config };
 
-  const beacon = (build: Record<string, any>, error: CallBackFun, success: CallBackFun) => {
+  const beacon = (build: Record<string, any>, error: BeaconCallbackFun, success: BeaconCallbackFun) => {
     const send = build ? JSON.stringify(build) : null;
 
     if (!send) {

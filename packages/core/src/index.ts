@@ -8,7 +8,7 @@ export type { CoreConfig } from "./config";
 export { Collector } from "./collector";
 
 export type { XhrSenderConfig as XhrConfig } from "./sender";
-export { createBeaconSender, createXhrSender } from "./sender";
+export { createBeaconSender, createXhrSender, XhrErrorEnum } from "./sender";
 
 export type { PluginHooks, CollectPlugin, PluginContext } from "./plugin";
 

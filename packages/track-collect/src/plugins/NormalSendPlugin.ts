@@ -1,73 +1,43 @@
 import type { CollectPlugin, XhrConfig } from "@collect/core";
 
-import { createXhrSender } from "@collect/core";
+import { createXhrSender, XhrErrorEnum } from "@collect/core";
+import { noop } from "@collect/shared";
 
 /**
- * give XHR send report
+ * give xhr send report
  */
 
-type ErrorQueueMap = Map<Record<string, any>, number>;
-
-export interface NormalSendPluginConfig extends XhrConfig {
-  sendSuccess: (build: Record<string, any>, errorQueue: ErrorQueueMap) => void;
-  sendError: (build: Record<string, any>, errorQueue: ErrorQueueMap) => void;
-  retryCount: number;
-  retryInterval: number;
+interface RetryConfig {
+  xhrRetryCount: number;
+  xhrRetryInterval: number;
 }
+
+type Factory = (build: Record<string, any>, handler: () => void) => void;
+
+export interface NormalSendPluginConfig extends XhrConfig, RetryConfig {}
 
 export function NormalSendPlugin(config: Partial<NormalSendPluginConfig>): CollectPlugin {
   const resolvedConfig = {
-    retryCount: 3,
-    retryInterval: 1000,
+    xhrRetryCount: 3,
+    xhrRetryInterval: 1000,
     ...config
   };
   const { request } = createXhrSender(resolvedConfig);
-  const errorQueue: ErrorQueueMap = new Map();
 
-  const insideRequest = (build: Record<string, any>) => {
-    request(build, insideError, insideSuccess);
-  };
+  const { add, remove, destroy } = createErrorRetry(resolvedConfig);
 
-  const insideError = (build: Record<string, any>) => {
-    const error =
-      resolvedConfig.sendError ||
-      ((build, queue) => {
-        if (!resolvedConfig.retryCount) return;
-        const count = queue.get(build);
-        if (count === undefined) {
-          queue.set(build, 1);
-          run(build);
-        } else {
-          if (count === resolvedConfig.retryCount) {
-            queue.delete(build);
-          } else {
-            queue.set(build, count + 1);
-            run(build);
-          }
+  const requestFactory = (build: Record<string, any>, handler?: () => void) => {
+    request(
+      build,
+      (record, code) => {
+        if (code !== XhrErrorEnum.InvalidBuild) {
+          add(record, handler || noop, requestFactory);
         }
-      });
-
-    error(build, errorQueue);
-  };
-
-  const insideSuccess = (build: Record<string, any>) => {
-    const success =
-      resolvedConfig.sendSuccess ||
-      ((build, queue) => {
-        if (queue.has(build)) {
-          queue.delete(build);
-        }
-      });
-
-    success(build, errorQueue);
-  };
-
-  const run = (build: Record<string, any>) => {
-    const count = errorQueue.get(build)!;
-    const timeout = 2 ** (count + 1) * resolvedConfig.retryInterval;
-    setTimeout(() => {
-      insideRequest(build);
-    }, timeout);
+      },
+      record => {
+        remove(record, handler || noop, requestFactory);
+      }
+    );
   };
 
   return {
@@ -76,13 +46,113 @@ export function NormalSendPlugin(config: Partial<NormalSendPluginConfig>): Colle
       order: "post",
       handler(event, build) {
         if (event && build) {
-          insideRequest(build);
+          try {
+            requestFactory(build);
+          } catch (error) {
+            console.log(error);
+          }
           return false;
         }
       }
     },
     destroy() {
-      errorQueue.clear();
+      destroy();
     }
   };
 }
+
+type QueueItemValue = Record<string, any>;
+
+type QueueItemCount = number;
+
+type QueueItemWeight = number;
+
+type ErrorQueueItem = [QueueItemValue, QueueItemCount, QueueItemWeight];
+
+const createErrorRetry = (config: RetryConfig) => {
+  const errorQueue: ErrorQueueItem[] = [];
+
+  let timer: number | undefined = undefined;
+
+  const add = (build: Record<string, any>, handler: () => void, factory: Factory) => {
+    const index = errorQueue.findIndex(([value]) => build === value);
+
+    if (index == -1) {
+      errorQueue.unshift([build, 1, getQueueWeight(1)]);
+    } else {
+      const queueItem = errorQueue[index];
+
+      errorQueue.splice(index, 1);
+
+      if (queueItem[1] < config.xhrRetryCount) {
+        setQueueAgain(errorQueue, genQueueItem(queueItem));
+      }
+    }
+
+    handler && handler();
+
+    run(factory);
+  };
+
+  const remove = (build: Record<string, any>, handler: () => void, factory: Factory) => {
+    const index = errorQueue.findIndex(([value]) => build === value);
+    if (index != -1) {
+      errorQueue.splice(index, 1);
+    }
+
+    handler && handler();
+
+    run(factory);
+  };
+
+  const run = (handler: (build: Record<string, any>, clear: () => void) => void) => {
+    if (timer || !errorQueue.length) return;
+    const [build, , weight] = errorQueue[0];
+
+    timer = setTimeout(() => {
+      handler(build, () => {
+        clearTimeout(timer);
+        timer = undefined;
+      });
+    }, weight);
+  };
+
+  const getQueueWeight = (count: number) => 2 ** count * config.xhrRetryInterval;
+
+  const genQueueItem = (item: ErrorQueueItem): ErrorQueueItem => {
+    const [build, count] = item;
+
+    return [build, count + 1, getQueueWeight(count + 1)];
+  };
+
+  const setQueueAgain = (queue: ErrorQueueItem[], item: ErrorQueueItem) => {
+    const [, , weight] = item;
+    let index = 0;
+
+    while (index < queue.length) {
+      const [, , insWeight] = queue[index];
+
+      if (weight <= insWeight) {
+        queue.splice(index, 0, item);
+        return;
+      }
+
+      index++;
+    }
+
+    queue.push(item);
+  };
+
+  const destroy = () => {
+    errorQueue.length = 0;
+    if (timer) clearTimeout(timer);
+    timer = undefined;
+  };
+
+  return {
+    add,
+    remove,
+    run,
+    destroy
+  };
+};

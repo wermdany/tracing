@@ -59,7 +59,7 @@ export class Collector {
     const isBail = this.pluginDriver.hookBail("beforeSend", [event, build]);
     if (isBail === false) return;
 
-    if (this.config.isLogger && this.config.sendLog) {
+    if (__DEV__ && this.config.isLogger && this.config.sendLog) {
       console.log(JSON.stringify(build, null, 2));
     }
 

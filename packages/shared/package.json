@@ -15,7 +15,7 @@
     "index.js"
   ],
   "buildOptions": {
-    "name": "collectShared",
+    "name": "CollectShared",
     "formats": [
       "esm-bundler",
       "esm-browser",

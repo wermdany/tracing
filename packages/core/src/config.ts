@@ -13,5 +13,5 @@ export const initConfig: CoreConfig = {
 };
 
 export function createInitConfig(inputConfig?: Partial<CoreConfig>): CoreConfig {
-  return Object.assign({}, initConfig, inputConfig);
+  return { ...initConfig, ...inputConfig };
 }

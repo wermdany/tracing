@@ -15,6 +15,9 @@ export function TestPlugin(): Plugin {
               res.statusCode = 200;
               res.end(post);
             });
+          } else if (req.url === "/apis/error" && req.method === "POST") {
+            res.statusCode = 402;
+            res.end();
           } else {
             next();
           }

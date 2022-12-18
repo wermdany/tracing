@@ -15,7 +15,7 @@
     "index.js"
   ],
   "buildOptions": {
-    "name": "collectCore",
+    "name": "CollectCore",
     "formats": [
       "esm-bundler",
       "esm-browser",

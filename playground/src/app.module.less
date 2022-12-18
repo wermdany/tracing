@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+
+  &-nav {
+    width: 256px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: scroll;
+
+    & > ul {
+      height: 100%;
+    }
+  }
+  &-body {
+    flex: 1;
+    margin: 0 15px;
+    padding-left: 256px;
+  }
+}

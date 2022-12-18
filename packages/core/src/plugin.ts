@@ -22,7 +22,7 @@ export interface FunctionPlugins {
   // 同步 熔断执行
   send: (this: PluginContext, event: string, build: Record<string, any>) => boolean | void | null;
   // 异步 并行执行
-  beforeDestroy: (this: PluginContext, ctx: Collector) => void;
+  beforeDestroy: (this: PluginContext, ctx: Collector) => any;
   // 同步 顺序执行
   destroy: (this: PluginContext, ctx: Collector) => void;
 }
@@ -150,6 +150,9 @@ export function PluginDriver(plugins: CollectPlugin[], options: Partial<CoreConf
   }
 
   return {
+    runHook,
+    runHookSync,
+    getSortedValidatePlugins,
     async hookParallel<H extends ParallelPluginHooks & AsyncPluginHooks>(
       hookName: H,
       args: Parameters<FunctionPlugins[H]>
@@ -226,7 +229,7 @@ function getOrCreate<K, V>(plugins: Map<K, V>, key: K, init: () => V): V {
   return value;
 }
 
-function mergeConfig(defaults: Record<string, any>, overrides: Record<string, any>) {
+export function mergeConfig(defaults: Record<string, any>, overrides: Record<string, any>) {
   const merged: Record<string, any> = { ...defaults };
 
   for (const key in overrides) {

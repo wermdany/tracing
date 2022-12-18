@@ -20,7 +20,7 @@ export function createStore<N extends string>(
   initStore?: Record<string, StoreProfile>,
   logger?: Logger
 ): Store<N> {
-  let store = Object.assign({}, initStore);
+  let store = { ...initStore };
 
   return {
     name,
@@ -35,7 +35,7 @@ export function createStore<N extends string>(
       store[key] = value;
     },
     getOrigin() {
-      return Object.assign({}, store);
+      return { ...store };
     },
     remove(key: string) {
       store = omit(store, [key]);

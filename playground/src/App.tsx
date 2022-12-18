@@ -1,13 +1,32 @@
-import React from "react";
-import { Button } from "antd";
+import { Menu } from "antd";
+import { Suspense } from "react";
+import { Link, Routes, Route, useLocation } from "react-router-dom";
+import styles from "./app.module.less";
 
-import { collect } from "./collect";
+import { routes } from "./routes";
 
 function App() {
+  const { pathname } = useLocation();
+
   return (
-    <div className="App">
-      <p>{1}</p>
-      <Button onClick={() => collect.report("test", { a: 1 })}>add count number</Button>
+    <div className={styles["container"]}>
+      <div className={styles["container-nav"]}>
+        <Menu
+          selectedKeys={[pathname]}
+          items={routes.map(item => ({ label: <Link to={item.key}>{item.label}</Link>, key: item.key }))}
+        ></Menu>
+      </div>
+      <div className={styles["container-body"]}>
+        <Routes>
+          {routes.map(item => (
+            <Route
+              key={item.key}
+              path={item.key}
+              element={<Suspense fallback={<>loading...</>}>{<item.element></item.element>}</Suspense>}
+            ></Route>
+          ))}
+        </Routes>
+      </div>
     </div>
   );
 }

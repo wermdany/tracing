@@ -6,7 +6,7 @@
 function createMockConsole<T extends keyof Console>(methods: T[]) {
   const methodsFns = methods.reduce((pre, item) => {
     const mock = jest.fn();
-    return Object.assign(pre, { [item]: mock });
+    return { ...pre, ...{ [item]: mock } };
   }, {} as Record<T, jest.Mock<any, any>>);
 
   return {
@@ -37,11 +37,11 @@ afterAll(() => {
 });
 
 function genLoggerPrefix(module?: string) {
-  return module ? `%c[${__NAME__}/${module}]` : `%c[${__NAME__}]`;
+  return module ? `[${__NAME__}/${module}]` : `[${__NAME__}]`;
 }
 
 const expectExtendConsole = mockConsoleMethods.reduce((pre, method) => {
-  return Object.assign(pre, genExpectHaveFun(method));
+  return { ...pre, ...genExpectHaveFun(method) };
 }, {} as jest.ExpectExtendMap);
 
 function genExpectHaveFun(method: keyof Console) {
@@ -53,11 +53,10 @@ function genExpectHaveFun(method: keyof Console) {
 
   return {
     [funName](received: undefined, module?: string, msg?: string) {
-      const receivedPrefix = mockConsole[method].mock.lastCall?.[0] || "";
-      const receivedOtherMsg = mockConsole[method].mock.lastCall?.slice(2) || [];
+      const receivedOtherMsg = mockConsole[method].mock.lastCall?.slice() || [];
       const prefix = genLoggerPrefix(module);
-      receivedOtherMsg.unshift(prefix);
-      if (receivedOtherMsg.join(" ") === receivedPrefix + " " + msg) {
+
+      if (receivedOtherMsg.join(" ") === prefix + " " + msg) {
         return {
           pass: true,
           message: () => ""
@@ -69,7 +68,7 @@ function genExpectHaveFun(method: keyof Console) {
         message: () =>
           `toHaveConsoleInfo:\n\n` +
           `Expected: ${receivedOtherMsg.join(" ")}\n` +
-          `Received: ${receivedPrefix + " " + msg}`
+          `Received: ${prefix + " " + msg}`
       };
     }
   };

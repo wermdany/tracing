@@ -49,7 +49,7 @@ export function hasOwn(obj: Record<string, any>, key: keyof any) {
  *
  */
 export function transProfile<T extends Record<string, any>>(origin: T): Record<string, any> {
-  const finish = Object.assign({}, origin);
+  const finish = { ...origin };
   for (const key in finish) {
     if (typeof finish[key] === "function") {
       finish[key] = finish[key].call();

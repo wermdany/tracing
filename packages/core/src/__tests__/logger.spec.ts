@@ -26,4 +26,10 @@ describe("test logger", () => {
     expect(closeLogger.warn("", "3", "4")).toHaveConsoleInfo(moduleStr, "1 2");
     expect(closeLogger.error("", "3", "4")).toHaveConsoleInfo(moduleStr, "1 2");
   });
+
+  it("throw error", () => {
+    expect(() => {
+      logger.throwError("has a Error");
+    }).toThrowErrorMatchingSnapshot();
+  });
 });
