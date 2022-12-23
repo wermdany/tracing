@@ -1,10 +1,12 @@
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import fs from "fs-extra";
 import chalk from "chalk";
 import readline from "readline";
 
 /** 项目根目录 */
-export const root = join(__dirname, "..");
+export const root = fileURLToPath(new URL("..", import.meta.url));
 
 export const globalExtensionsFile = "globalExtensions.ts";
 

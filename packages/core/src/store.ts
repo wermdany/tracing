@@ -1,10 +1,10 @@
 import type { Logger } from "./logger";
 
-import { hasOwn, omit, transProfile } from "@collect/shared";
+import { hasOwn, omit, transProfile } from "@tracker/shared";
 
 export type JsonPrimitive = string | number | boolean | null;
 
-type StoreProfile = JsonPrimitive | (() => JsonPrimitive);
+export type StoreProfile = JsonPrimitive | (() => JsonPrimitive);
 
 export interface Store<N extends string> {
   name: N;

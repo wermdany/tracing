@@ -2,19 +2,17 @@
  * 此文件提供 rollup 打包
  */
 
+import type { OutputOptions } from "rollup";
+
 import path from "node:path";
 import minimist from "minimist";
 import fs from "fs-extra";
-import execa from "execa";
+import { rollup } from "rollup";
+
+import { targets, rootJoin, removePreBuild, canIBuildTargets } from "./utils";
+import { generateDTS } from "./dts";
+import { createRollupConfigs } from "./rollup";
 import chalk from "chalk";
-import {
-  targets,
-  rootJoin,
-  removePreBuild,
-  canIBuildTargets,
-  globalExtensionsFile,
-  getDeclareModuleLine
-} from "./utils";
 
 const args = minimist(process.argv.slice(2));
 
@@ -31,7 +29,7 @@ run();
 async function run() {
   if (isRelease) {
     // remove build cache for release builds to avoid outdated enum values
-    await fs.remove(path.resolve(__dirname, "../node_modules/.rts2_cache"));
+    await fs.remove(rootJoin("node_modules/.rts2_cache"));
   }
   if (!inputTargets.length) {
     await buildAll(targets);
@@ -82,77 +80,34 @@ async function build(target: string) {
   const env = (pkg.buildOptions && pkg.buildOptions.env) || (isDevOnly ? "development" : "production");
 
   // build code
-  await execa(
-    "rollup",
-    [
-      "-c",
-      "--environment",
-      [
-        `NODE_ENV:${env}`,
-        `TARGET:${target}`,
-        isBuildTypes ? `TYPES:true` : ``,
-        isProdOnly ? `PROD_ONLY:true` : ``,
-        isSourceMap ? `SOURCE_MAP:true` : ``
-      ]
-        .filter(Boolean)
-        .join(",")
-    ],
-    {
-      stdio: "inherit"
+  const rollupOptions = createRollupConfigs(target, {
+    nodeEnv: env,
+    sourcemap: isSourceMap,
+    prodOnly: isProdOnly,
+    buildType: isBuildTypes
+  });
+  try {
+    for (const options of rollupOptions) {
+      const inputFile = options.input;
+      const output = options.output as OutputOptions;
+
+      console.log(chalk.cyan(`\n ${chalk.bold(inputFile)} → ${chalk.bold(output.file)}...`));
+
+      const start = Date.now();
+
+      const bundle = await rollup(options);
+
+      await bundle.write(output);
+      await bundle.close();
+
+      console.log(chalk.green(`created ${chalk.bold(output.file)} in ${chalk.bold(Date.now() - start)}ms`));
     }
-  );
+  } catch (error) {
+    console.error(error);
+  }
+
   // build types
   if (isBuildTypes && pkg.types) {
-    console.log();
-    console.log(chalk.bold(chalk.yellow(`Rolling up type definitions for ${target}...`)));
-    const { Extractor, ExtractorConfig } = await import("@microsoft/api-extractor");
-
-    const extractorConfig = ExtractorConfig.loadFileAndPrepare(resolve("api-extractor.json"));
-    const extractorResult = Extractor.invoke(extractorConfig, {
-      localBuild: true,
-      showVerboseMessages: true
-      // showDiagnostics: true // debug
-    });
-    if (extractorResult.succeeded) {
-      const types = resolve("types");
-      const DTSPath = resolve(pkg.types);
-
-      if (await fs.pathExists(types)) {
-        // add custom types
-        const customTypePaths = await fs.readdir(types);
-        const typesFile = await fs.readFile(DTSPath, "utf8");
-
-        const customTypes = await Promise.all(
-          customTypePaths
-            .filter(file => /\.d\.ts$/.test(file))
-            .map(file => {
-              return fs.readFile(resolve("types", file), "utf8");
-            })
-        );
-
-        await fs.writeFile(DTSPath, typesFile + "\n" + customTypes.join("\n"));
-      }
-      // add declare module
-      const globalExtensionsFilePath = resolve("src", globalExtensionsFile);
-      if (await fs.pathExists(globalExtensionsFilePath)) {
-        const line = await getDeclareModuleLine(globalExtensionsFilePath);
-
-        await execa("tail", ["-n", `+${line}`, globalExtensionsFilePath, ">>", DTSPath], {
-          stdio: "inherit",
-          shell: true
-        });
-      }
-      console.log(chalk.bold(chalk.green(`API Extractor completed ${target} successfully.`)));
-    } else {
-      console.error(
-        `API Extractor completed with ${extractorResult.errorCount} errors` +
-          ` and ${extractorResult.warningCount} warnings`
-      );
-      process.exit(1);
-    }
-    // remove types cache
-    removePreBuild(target, "packages");
-    // remove test-utils cache
-    removePreBuild(target, "test-utils");
+    await generateDTS(target);
   }
 }

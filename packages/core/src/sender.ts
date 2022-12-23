@@ -1,4 +1,4 @@
-import type { Collector } from "./collector";
+import type { TrackerCore } from "./core";
 
 interface BaseSenderConfig {
   url: string;
@@ -122,8 +122,8 @@ const beaconConfig: BaseSenderConfig = {
 
 type BeaconCallbackFun = (build: Record<string, any>) => void;
 
-export function createBeaconSender(collector: Collector, config: Partial<BaseSenderConfig>) {
-  const logger = collector.logger;
+export function createBeaconSender(tc: TrackerCore, config: Partial<BaseSenderConfig>) {
+  const logger = tc.logger;
   const isHasBeaconApi = navigator && "sendBeacon" in navigator;
   if (!isHasBeaconApi) {
     __DEV__ && logger.warn("Your browser does not support 'Beacon Api'");

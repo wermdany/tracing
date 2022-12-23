@@ -1,4 +1,4 @@
-import * as P from "../profile";
+import * as P from "../browser";
 
 beforeAll(() => {
   document.title = "test element";

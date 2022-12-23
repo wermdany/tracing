@@ -1,6 +1,6 @@
-import { createCollectReport } from "track-collect";
+import { createBrowserTracker } from "browser-tracker";
 
-export const collect = createCollectReport({
+export const tracker = createBrowserTracker({
   url: "/apis/success",
   xhrResponseType: "json",
   xhrTimeout: 1000

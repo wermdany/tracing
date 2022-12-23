@@ -9,7 +9,7 @@
       "compilerOptions": {
         "baseUrl": "packages/core/dist/",
         "paths": {
-          "@collect/*": ["packages/*/src"]
+          "@tracker/*": ["packages/*/src"]
         }
       },
       "include": ["global.d.ts", "packages/*/src/**/*.ts"]

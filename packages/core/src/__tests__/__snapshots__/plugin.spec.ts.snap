@@ -1,5 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`test PluginDriver inside Api getSortedValidatePlugins 1`] = `"Error running plugin hook \\"build\\" for plugin \\"test\\", expected a function hook or an object with a \\"handler\\" function."`;
+exports[`test PluginDriver inside Api getSortedValidatePlugins 1`] = `"Error running plugin hook "build" for plugin "test", expected a function hook or an object with a "handler" function."`;
 
 exports[`test PluginDriver inside Api runHookSync error 1`] = `"record is not defined"`;

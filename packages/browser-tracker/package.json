@@ -1,12 +1,12 @@
 {
-  "name": "@tracker/shared",
+  "name": "browser-tracker",
   "version": "0.0.1",
   "private": false,
   "lib": true,
-  "description": "@tracker/shared",
+  "description": "@tracker/browser-tracker",
   "main": "index.js",
-  "module": "dist/shared.esm-bundler.js",
-  "types": "dist/shared.d.ts",
+  "module": "dist/browser-tracker.esm-bundler.js",
+  "types": "dist/browser-tracker.d.ts",
   "sideEffects": false,
   "author": "wermdany <https://github.com/wermdany>",
   "license": "ISC",
@@ -15,7 +15,7 @@
     "index.js"
   ],
   "buildOptions": {
-    "name": "TrackerShared",
+    "name": "BrowserTracker",
     "formats": [
       "esm-bundler",
       "esm-browser",
@@ -26,19 +26,21 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wermdany/tracker.git",
-    "directory": "packages/shared"
+    "directory": "packages/browser-tracker"
   },
   "bugs": {
     "url": "https://github.com/wermdany/tracker/issues"
   },
-  "homepage": "https://github.com/wermdany/tracker/tree/master/packages/shared#readme",
+  "homepage": "https://github.com/wermdany/tracker/tree/master/packages/browser-tracker#readme",
   "keywords": [
+    "collect",
     "tracker",
     "report",
-    "collect",
     "FE",
-    "web",
-    "browser"
+    "web"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "@tracker/core": "0.0.1",
+    "@tracker/shared": "0.0.1"
+  }
 }

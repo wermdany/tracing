@@ -141,7 +141,7 @@ function genApiExtractorTemplate(name: string) {
             compilerOptions: {
               baseUrl: `packages/${name}/dist/`,
               paths: {
-                "@collect/*": ["packages/*/src"]
+                "@tracker/*": ["packages/*/src"]
               }
             },
             include: ["global.d.ts", "packages/*/src/**/*.ts"],

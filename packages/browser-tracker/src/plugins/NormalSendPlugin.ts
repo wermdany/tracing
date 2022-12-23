@@ -1,7 +1,7 @@
-import type { CollectPlugin, XhrConfig } from "@collect/core";
+import type { TrackerPlugin, XhrConfig } from "@tracker/core";
 
-import { createXhrSender, XhrErrorEnum } from "@collect/core";
-import { noop } from "@collect/shared";
+import { createXhrSender, XhrErrorEnum } from "@tracker/core";
+import { noop } from "@tracker/shared";
 
 /**
  * give xhr send report
@@ -16,7 +16,7 @@ type Factory = (build: Record<string, any>, handler: () => void) => void;
 
 export interface NormalSendPluginConfig extends XhrConfig, RetryConfig {}
 
-export function NormalSendPlugin(config: Partial<NormalSendPluginConfig>): CollectPlugin {
+export function NormalSendPlugin(config: Partial<NormalSendPluginConfig>): TrackerPlugin {
   const resolvedConfig = {
     xhrRetryCount: 3,
     xhrRetryInterval: 1000,
@@ -24,18 +24,18 @@ export function NormalSendPlugin(config: Partial<NormalSendPluginConfig>): Colle
   };
   const { request } = createXhrSender(resolvedConfig);
 
-  const { add, remove, destroy } = createErrorRetry(resolvedConfig);
+  const retry = resolvedConfig.xhrRetryCount == 0 ? undefined : createErrorRetry(resolvedConfig);
 
   const requestFactory = (build: Record<string, any>, handler?: () => void) => {
     request(
       build,
       (record, code) => {
         if (code !== XhrErrorEnum.InvalidBuild) {
-          add(record, handler || noop, requestFactory);
+          retry && retry.add(record, handler || noop, requestFactory);
         }
       },
       record => {
-        remove(record, handler || noop, requestFactory);
+        retry && retry.remove(record, handler || noop, requestFactory);
       }
     );
   };
@@ -56,7 +56,7 @@ export function NormalSendPlugin(config: Partial<NormalSendPluginConfig>): Colle
       }
     },
     destroy() {
-      destroy();
+      retry && retry.destroy();
     }
   };
 }

@@ -1,6 +1,5 @@
 import type { FC } from "react";
-import type {} from "track-collect";
-import { createCollectReport } from "track-collect";
+import { createBrowserTracker } from "browser-tracker";
 
 import { useEffect, useRef } from "react";
 import { Space, Button } from "antd";
@@ -13,10 +12,10 @@ const config = {
 } as const;
 
 const Init: FC = () => {
-  const collect = useRef<any>();
+  const tracker = useRef<any>();
   useEffect(() => {
-    collect.current = createCollectReport({ ...config });
-    return () => collect.current.destroy();
+    tracker.current = createBrowserTracker({ ...config });
+    return () => tracker.current.destroy();
   }, []);
 
   let number = 1;
@@ -28,7 +27,7 @@ const Init: FC = () => {
       <Space>
         <Button
           onClick={() => {
-            collect.current.report("test", { a: number++ });
+            tracker.current.report("test", { a: number++ });
           }}
         >
           发送成功请求

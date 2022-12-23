@@ -1,15 +1,15 @@
-import type { FunctionPlugins, CollectPlugin } from "../plugin";
-import type { Collector } from "../collector";
-import type { CoreConfig } from "../config";
+import type { FunctionPlugins, TrackerPlugin } from "../plugin";
+import type { TrackerCore } from "../core";
+import type { TrackerCoreConfig } from "../config";
 
 import { mergeConfig, PluginDriver } from "../plugin";
 import { createLogger } from "../logger";
 
 const logger = createLogger("core");
 
-const ctx = {} as Collector;
+const ctx = {} as TrackerCore;
 
-const coreConfig = {} as CoreConfig;
+const coreConfig = {} as TrackerCoreConfig;
 
 describe("test PluginDriver utils", () => {
   it("test mergeConfig", () => {
@@ -201,7 +201,7 @@ describe("test PluginDriver core", () => {
   });
 });
 
-function genPlugins(hook: keyof FunctionPlugins, handlers: Array<(...args: any[]) => any>): CollectPlugin[] {
+function genPlugins(hook: keyof FunctionPlugins, handlers: Array<(...args: any[]) => any>): TrackerPlugin[] {
   return handlers.map((handler, index) => ({
     name: "test" + index,
     [hook]: handler
