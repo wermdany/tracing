@@ -79,6 +79,10 @@ export interface FunctionPlugins {
 }
 ```
 
+这里有一个图解，能够更加便捷您理解流程
+
+![HooksFlow](./images/TrackerHooksFlow.jpg)
+
 ### Plugin Hooks 的上下文
 
 每一个 Hook 都有一个 PluginContext 里面提供了便捷的方法
