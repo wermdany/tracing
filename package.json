@@ -17,11 +17,12 @@
     "test:unit": "jest",
     "test:watch": "jest --coverage --watch",
     "test:coverage": "jest --coverage",
+    "test:tsc": "tsc --noEmit",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "playground": "cd playground && pnpm run dev"
   },
   "author": "wermdany <https://github.com/wermdany>",
-  "license": "ISC",
+  "license": "MIT",
   "keywords": [
     "tracker",
     "report",

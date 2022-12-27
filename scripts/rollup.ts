@@ -176,7 +176,7 @@ export function createRollupConfigs(target: string, config: RollupConfig): Rollu
 
   function createProductionConfig(format) {
     return createBaseRollupConfig(format, {
-      file: resolve(`dist/${pkg.name}.${format}.prod.js`),
+      file: resolve(`dist/${filename}.${format}.prod.js`),
       format: targetOutputConfigs[format].format
     });
   }

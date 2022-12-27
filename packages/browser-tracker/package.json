@@ -1,5 +1,5 @@
 {
-  "name": "browser-tracker",
+  "name": "@tracker/browser-tracker",
   "version": "0.0.1",
   "private": false,
   "lib": true,
