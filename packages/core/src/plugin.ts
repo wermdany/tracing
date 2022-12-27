@@ -43,7 +43,7 @@ export type ParallelPluginHooks = "beforeDestroy";
 // 只要有一个错误，则直接返回
 export type BailPluginHooks = "beforeSend" | "send";
 // 需要按照顺序循环合并值
-export type ChainReduceHooks = Exclude<
+export type ChainMergeHooks = Exclude<
   keyof FunctionPlugins,
   SequentialPluginHooks | ParallelPluginHooks | BailPluginHooks
 >;
@@ -186,7 +186,7 @@ export function PluginDriver(plugins: TrackerPlugin[], options: Partial<TrackerC
       }
       return true;
     },
-    hookChainMergeSync<H extends ChainReduceHooks & SyncPluginHooks>(
+    hookChainMergeSync<H extends ChainMergeHooks & SyncPluginHooks>(
       hookName: H,
       args: Parameters<FunctionPlugins[H]>,
       initialValue: Record<string, any>
