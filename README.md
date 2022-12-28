@@ -87,7 +87,7 @@ export interface FunctionPlugins {
 
 每一个 Hook 都有一个 PluginContext 里面提供了便捷的方法
 
-> Hooks 不要使用 [剪头函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions) 因为 Hooks 上下文通过 this 来运行
+> Hooks 不要使用 [箭头函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions) 因为 Hooks 上下文通过 this 来运行
 
 ```typescript
 interface PluginContext {

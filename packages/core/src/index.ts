@@ -1,7 +1,7 @@
 export type { Store, StoreProfile } from "./store";
 export { createStore } from "./store";
 
-export type { LoggerConfig as LoggerOptions } from "./logger";
+export type { LoggerConfig, Logger } from "./logger";
 export { createLogger } from "./logger";
 
 export type { TrackerCoreConfig } from "./config";

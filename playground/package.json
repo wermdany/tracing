@@ -9,13 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tracker/browser-tracker": "workspace:^0.0.1",
+    "@tracker/core": "workspace:0.0.1",
+    "@tracker/web-click": "workspace:^0.0.1",
     "antd": "^5.0.0",
     "axios": "^1.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.4.5",
-    "react-router-dom": "^6.4.5",
-    "browser-tracker": "workspace:^0.0.1"
+    "react-router-dom": "^6.4.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.15",

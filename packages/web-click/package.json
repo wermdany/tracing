@@ -1,0 +1,47 @@
+{
+  "name": "@tracker/web-click",
+  "version": "0.0.1",
+  "private": false,
+  "lib": true,
+  "description": "@tracker/web-click",
+  "main": "index.js",
+  "module": "dist/web-click.esm-bundler.js",
+  "types": "dist/web-click.d.ts",
+  "sideEffects": false,
+  "author": "wermdany <https://github.com/wermdany>",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "buildOptions": {
+    "name": "TrackerWebClick",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "cjs",
+      "global"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wermdany/tracker.git",
+    "directory": "packages/web-click"
+  },
+  "bugs": {
+    "url": "https://github.com/wermdany/tracker/issues"
+  },
+  "homepage": "https://github.com/wermdany/tracker/tree/master/packages/web-click#readme",
+  "keywords": [
+    "tracker",
+    "report",
+    "collect",
+    "FE",
+    "web",
+    "browser"
+  ],
+  "dependencies": {
+    "@tracker/core": "0.0.1",
+    "@tracker/shared": "0.0.1"
+  }
+}

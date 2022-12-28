@@ -243,3 +243,11 @@ export function getElementId(el: Element) {
 export function getElementClassList(el: Element): string[] {
   return Array.from(el.classList);
 }
+
+/**
+ * 获取一个 DOM 元素的属性名列表
+ * @param el - 元素
+ */
+export function getAttributeNames(el: Element) {
+  return Array.from(el.getAttributeNames());
+}

@@ -1,0 +1,19 @@
+{
+  "extends": "../../api-extractor.json",
+  "mainEntryPointFilePath": "./dist/packages/web-click/src/index.d.ts",
+  "dtsRollup": {
+    "publicTrimmedFilePath": "./dist/web-click.d.ts"
+  },
+  "compiler": {
+    "overrideTsconfig": {
+      "compilerOptions": {
+        "baseUrl": "packages/web-click/dist/",
+        "paths": {
+          "@tracker/*": ["packages/*/src"]
+        }
+      },
+      "include": ["global.d.ts", "packages/*/src/**/*.ts"],
+      "exclude": ["test-utils/*"]
+    }
+  }
+}

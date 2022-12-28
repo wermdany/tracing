@@ -21,7 +21,7 @@
       "@tracker/*": ["packages/*/src"]
     }
   },
-  "include": ["global.d.ts", "packages/*/src/**/*.ts", "test-utils/*"],
+  "include": ["global.d.ts", "packages/*/src/", "test-utils/*"],
   "exclude": ["scripts/*.ts", "playground/*", "packages/*/dist/*"],
   "references": [
     {

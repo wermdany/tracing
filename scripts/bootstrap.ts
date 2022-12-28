@@ -96,7 +96,10 @@ async function genChildrenApp(obj: PromptResult) {
   const childrenName = "@" + rootPkg.name + "/" + obj.name;
   const appPath = rootJoin("packages", obj.name);
   // create dir and required files
-  await outputFile(join(appPath, "src", "index.ts"), "");
+  await outputFile(
+    join(appPath, "src", "index.ts"),
+    `export const ${toParseCase(rootPkg.name + "-" + obj.name)} = "TODO";\n`
+  );
   // create package.json
   await outputFile(join(appPath, "package.json"), genPackageTemplate(obj, childrenName));
   // create api-extractor.json

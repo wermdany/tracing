@@ -11,9 +11,9 @@ export function createBrowserTracker(config: PartialOmit<NormalPluginConfig & Tr
 
   if (config.plugins) {
     config.plugins.unshift(normalPlugins);
+  } else {
+    config.plugins = normalPlugins;
   }
-
-  config.plugins = normalPlugins;
 
   const tc = new TrackerCore(config);
 

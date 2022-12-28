@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { createBrowserTracker } from "browser-tracker";
+import { createBrowserTracker } from "@tracker/browser-tracker";
 
 import { useEffect, useRef } from "react";
 import { Space, Button } from "antd";
