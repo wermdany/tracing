@@ -251,3 +251,7 @@ export function getElementClassList(el: Element): string[] {
 export function getAttributeNames(el: Element) {
   return Array.from(el.getAttributeNames());
 }
+
+export function dd() {
+  return 1;
+}
