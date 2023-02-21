@@ -1,6 +1,6 @@
 import type { Logger } from "./logger";
 
-import { hasOwn, omit, transProfile } from "@tracker/shared";
+import { hasOwn, omit, transProfile } from "@tracing/shared";
 
 export type JsonPrimitive = string | number | boolean | null;
 

@@ -1,7 +1,7 @@
-import type { TrackerPlugin, XhrConfig } from "@tracker/core";
+import type { TracingPlugin, XhrConfig } from "@tracing/core";
 
-import { createXhrSender, XhrErrorEnum } from "@tracker/core";
-import { noop } from "@tracker/shared";
+import { createXhrSender, XhrErrorEnum } from "@tracing/core";
+import { noop } from "@tracing/shared";
 
 /**
  * give xhr send report
@@ -16,7 +16,7 @@ type Factory = (build: Record<string, any>, handler: () => void) => void;
 
 export interface NormalSendPluginConfig extends XhrConfig, RetryConfig {}
 
-export function NormalSendPlugin(config: Partial<NormalSendPluginConfig>): TrackerPlugin {
+export function NormalSendPlugin(config: Partial<NormalSendPluginConfig>): TracingPlugin {
   const resolvedConfig = {
     xhrRetryCount: 3,
     xhrRetryInterval: 1000,

@@ -1,6 +1,6 @@
-import { createBrowserTracker } from "browser-tracker";
+import { createBrowserTracing } from "browser-tracing";
 
-export const tracker = createBrowserTracker({
+export const tracing = createBrowserTracing({
   url: "/apis/success",
   xhrResponseType: "json",
   xhrTimeout: 1000

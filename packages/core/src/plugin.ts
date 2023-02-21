@@ -1,6 +1,6 @@
 import type { Logger } from "./logger";
-import type { TrackerCore } from "./core";
-import type { TrackerCoreConfig } from "./config";
+import type { TracingCore } from "./core";
+import type { TracingCoreConfig } from "./config";
 
 import { createLogger } from "./logger";
 
@@ -10,9 +10,9 @@ export interface NormalPlugin {
 
 export interface FunctionPlugins {
   // 同步 顺序执行
-  setup: (this: PluginContext, initConfig: TrackerCoreConfig) => void;
+  setup: (this: PluginContext, initConfig: TracingCoreConfig) => void;
   // 同步 顺序执行
-  init: (this: PluginContext, ctx: TrackerCore) => void;
+  init: (this: PluginContext, ctx: TracingCore) => void;
   // 同步 顺序执行
   report: (this: PluginContext, event: string, record: Record<string, any>) => void;
   // 同步 循环合并
@@ -22,9 +22,9 @@ export interface FunctionPlugins {
   // 同步 熔断执行
   send: (this: PluginContext, event: string, build: Record<string, any>) => boolean | void | null;
   // 异步 并行执行
-  beforeDestroy: (this: PluginContext, ctx: TrackerCore) => any;
+  beforeDestroy: (this: PluginContext, ctx: TracingCore) => any;
   // 同步 顺序执行
-  destroy: (this: PluginContext, ctx: TrackerCore) => void;
+  destroy: (this: PluginContext, ctx: TracingCore) => void;
 }
 
 type ObjectHook<T, O = {}> = T | ({ handler: T; order?: "pre" | "post" | null } & O);
@@ -54,21 +54,21 @@ export type PluginHooks = {
   >;
 };
 
-export type TrackerPlugin = Partial<PluginHooks> & NormalPlugin;
+export type TracingPlugin = Partial<PluginHooks> & NormalPlugin;
 
-export function PluginDriver(plugins: TrackerPlugin[], options: Partial<TrackerCoreConfig>, logger: Logger) {
-  const sortedPlugins: Map<keyof FunctionPlugins, TrackerPlugin[]> = new Map();
-  const pluginContexts: ReadonlyMap<TrackerPlugin, PluginContext> = new Map(
+export function PluginDriver(plugins: TracingPlugin[], options: Partial<TracingCoreConfig>, logger: Logger) {
+  const sortedPlugins: Map<keyof FunctionPlugins, TracingPlugin[]> = new Map();
+  const pluginContexts: ReadonlyMap<TracingPlugin, PluginContext> = new Map(
     plugins.map(plugin => [plugin, createContext(plugin, options)])
   );
 
   async function runHook<H extends AsyncPluginHooks>(
     hookName: H,
     args: Parameters<FunctionPlugins[H]>,
-    plugin: TrackerPlugin
+    plugin: TracingPlugin
   ): Promise<ReturnType<FunctionPlugins[H]>>;
 
-  async function runHook<H extends AsyncPluginHooks>(hookName: H, args: unknown[], plugin: TrackerPlugin) {
+  async function runHook<H extends AsyncPluginHooks>(hookName: H, args: unknown[], plugin: TracingPlugin) {
     const hook = plugin[hookName]!;
 
     const handler = typeof hook === "object" ? hook.handler : hook;
@@ -90,7 +90,7 @@ export function PluginDriver(plugins: TrackerPlugin[], options: Partial<TrackerC
   function runHookSync<H extends SyncPluginHooks>(
     hookName: H,
     args: Parameters<FunctionPlugins[H]>,
-    plugin: TrackerPlugin
+    plugin: TracingPlugin
   ): ReturnType<FunctionPlugins[H]> {
     const hook = plugin[hookName]!;
     const handler = typeof hook === "object" ? hook.handler : hook;
@@ -106,12 +106,12 @@ export function PluginDriver(plugins: TrackerPlugin[], options: Partial<TrackerC
 
   function getSortedValidatePlugins(
     hookName: keyof FunctionPlugins,
-    plugins: TrackerPlugin[],
+    plugins: TracingPlugin[],
     validateHandler = validateFunctionPluginHandler
   ) {
-    const pre: TrackerPlugin[] = [];
-    const normal: TrackerPlugin[] = [];
-    const post: TrackerPlugin[] = [];
+    const pre: TracingPlugin[] = [];
+    const normal: TracingPlugin[] = [];
+    const post: TracingPlugin[] = [];
 
     for (const plugin of plugins) {
       const hook = plugin[hookName];
@@ -137,7 +137,7 @@ export function PluginDriver(plugins: TrackerPlugin[], options: Partial<TrackerC
     return pre.concat(normal, post);
   }
 
-  function validateFunctionPluginHandler(handler: unknown, hookName: string, plugin: TrackerPlugin) {
+  function validateFunctionPluginHandler(handler: unknown, hookName: string, plugin: TracingPlugin) {
     if (typeof handler !== "function") {
       logger.throwError(
         `Error running plugin hook "${hookName}" for plugin "${plugin.name}", expected a function hook or an object with a "handler" function.`
@@ -210,7 +210,7 @@ export interface PluginContext {
   meta: ContextMeta;
 }
 
-export function createContext(plugin: TrackerPlugin, options: Partial<TrackerCoreConfig>): PluginContext {
+export function createContext(plugin: TracingPlugin, options: Partial<TracingCoreConfig>): PluginContext {
   return {
     logger: createLogger(plugin.name, options),
     meta: {

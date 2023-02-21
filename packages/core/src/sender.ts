@@ -1,4 +1,4 @@
-import type { TrackerCore } from "./core";
+import type { TracingCore } from "./core";
 
 interface BaseSenderConfig {
   url: string;
@@ -122,7 +122,7 @@ const beaconConfig: BaseSenderConfig = {
 
 type BeaconCallbackFun = (build: Record<string, any>) => void;
 
-export function createBeaconSender(tc: TrackerCore, config: Partial<BaseSenderConfig>) {
+export function createBeaconSender(tc: TracingCore, config: Partial<BaseSenderConfig>) {
   const logger = tc.logger;
   const isHasBeaconApi = navigator && "sendBeacon" in navigator;
   if (!isHasBeaconApi) {

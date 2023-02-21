@@ -1,12 +1,12 @@
 {
-  "name": "@tracing/core",
+  "name": "browser-tracing",
   "version": "0.0.1",
   "private": false,
   "lib": true,
-  "description": "@tracing/core",
+  "description": "@tracing/browser-tracing",
   "main": "index.js",
-  "module": "dist/core.esm-bundler.js",
-  "types": "dist/core.d.ts",
+  "module": "dist/browser-tracing.esm-bundler.js",
+  "types": "dist/browser-tracing.d.ts",
   "sideEffects": false,
   "author": "wermdany <https://github.com/wermdany>",
   "license": "ISC",
@@ -15,7 +15,7 @@
     "index.js"
   ],
   "buildOptions": {
-    "name": "TracingCore",
+    "name": "BrowserTracing",
     "formats": [
       "esm-bundler",
       "esm-browser",
@@ -26,21 +26,22 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wermdany/tracing.git",
-    "directory": "packages/core"
+    "directory": "packages/browser-tracing"
   },
   "bugs": {
     "url": "https://github.com/wermdany/tracing/issues"
   },
-  "homepage": "https://github.com/wermdany/tracing/tree/master/packages/core#readme",
+  "homepage": "https://github.com/wermdany/tracing/tree/master/packages/browser-tracing#readme",
   "keywords": [
+    "collect",
     "tracker",
     "report",
-    "collect",
     "FE",
-    "web",
-    "browser"
+    "web"
   ],
   "dependencies": {
-    "@tracing/shared": "0.0.1"
+    "@tracing/core": "0.0.1",
+    "@tracing/shared": "0.0.1",
+    "@tracing/web-click": "workspace:^0.0.1"
   }
 }

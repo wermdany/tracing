@@ -35,16 +35,19 @@ const run = (bin: string, args: readonly string[], options?: execa.Options) =>
   execa(bin, args, { stdio: "inherit", ...options });
 
 const step = (msg: string) => console.log(chalk.cyanBright(msg));
-const end = (msg: string) => console.log(chalk.greenBright(msg));
 
-release(targets);
+release(targets).catch(error => {
+  // reset file version
+  updatePackageVersion(targets, curVer);
+  console.error(error);
+});
 
 async function release(targets: string[]) {
-  // 获取需要生产的版本
+  // get release version
   const version = await getVersion();
-  // 二次确认
+  // confirm again
   const { Y } = await prompt<{ Y: boolean }>({
-    message: `是否确认本次生产? v${version},${targets.join(",")}`,
+    message: `Releasing v${version}. Confirm?`,
     type: "toggle",
     name: "Y"
   });
@@ -53,43 +56,46 @@ async function release(targets: string[]) {
     return;
   }
 
-  // 代码测试
-  step("\n开始运行单元测试...");
+  const startTime = Date.now();
+
+  // unit test
+  step("\nRunning tests...");
   if (!isSkipTest) {
     await run("pnpm", ["run", "test:unit"]);
   } else {
-    console.log(chalk.yellow("跳过单元测试"));
+    console.log(chalk.yellow("Skipped tests"));
   }
-  end("\n单元测试结束");
 
-  // 打包
-  step("\n开始打包...");
+  // build
+  step("\nBuilding all packages...");
   if (!isSkipBuild) {
     await buildTargets();
   } else {
-    console.log(chalk.yellow("跳过打包"));
+    console.log(chalk.yellow("Skipped build"));
   }
-  end("\n打包结束");
 
-  // 修改关联版本
-  step("\n更新版本号...");
+  // update version
+  step("\nUpdating version...");
   await updatePackageVersion(targets, version);
-  end("\n更新版本号结束");
 
-  // 生成 CHANGELOG.md
-  step("\n生成修改日志文件...");
+  // generate CHANGELOG.md
+  step("\nGenerating changelog...");
   await run("pnpm", ["run", "changelog"]);
-  end("\n生成修改日志文件完成");
 
-  // 提交提交代码
+  // publish to npm
   await commitCode(version);
 
-  // 发布推送代码至仓库
+  // push commit to github
+  for (const target of targets) {
+    await publishPackage(target, version);
+  }
+
+  // push tag to github
   await createTag(version);
 
-  // 发布 NPM
-  // await publishPackages();
-  console.log(chalk.greenBright(`发布生产:v${version}成功！`));
+  const releaseTime = (Date.now() - startTime) / 1000;
+
+  console.log(chalk.greenBright(`Release Successful!!! v${version} (${releaseTime}s)`));
 }
 
 /**
@@ -99,20 +105,20 @@ async function getVersion() {
   let useVersion: string;
   if (!inputVersion) {
     const { version } = await prompt<{ version: string }>({
-      message: `请选择生产版本 (当前 ${chalk.cyan(curVer)})`,
+      message: `Select release type (current ${chalk.cyan(curVer)})`,
       name: "version",
       type: "select",
       choices: bumpChoices.concat({ name: "custom", message: "custom", value: "custom" })
     });
     if (version === "custom") {
       const { customInput } = await prompt<{ customInput: string }>({
-        message: "请手动输入版本号",
+        message: "Input custom version",
         type: "input",
         name: "customInput",
         initial: curVer,
         validate: (value: string) => {
           if (!semver.valid(value)) {
-            return `版本号无效: ${value}`;
+            return `invalid target version: ${value}`;
           }
           return true;
         }
@@ -126,7 +132,7 @@ async function getVersion() {
   }
 
   if (!semver.valid(useVersion)) {
-    console.log(chalk.red(`版本号无效: ${chalk.underline(useVersion)}`));
+    console.log(chalk.red(`invalid target version: ${chalk.underline(useVersion)}`));
     process.exit(1);
   }
 
@@ -134,7 +140,7 @@ async function getVersion() {
 }
 
 async function buildTargets() {
-  await run("pnpm", ["run", "build", "--", "--release"]);
+  await run("pnpm", ["run", "build", "", "--release"]);
 }
 
 async function updatePackageVersion(targets: string[], version: string) {
@@ -166,6 +172,9 @@ async function modifyDepsVersion(path: string, key: string, value: string, targe
       const childrenName = `@${rootPkg.name}/${target}`;
       if (childrenName in pkg[key]) {
         const old = pkg[key][childrenName];
+
+        if (old === "workspace:*") continue;
+
         pkg[key][childrenName] = value;
         console.log(chalk.yellow(`${path} ${key} ${childrenName} ${old} -> ${value}`));
       }
@@ -173,25 +182,63 @@ async function modifyDepsVersion(path: string, key: string, value: string, targe
   }
 }
 
-// async function publishPackages(targets: string[], version: string) {}
+async function publishPackage(target: string, version: string) {
+  const targetRoot = rootJoin("packages", target);
+
+  let releaseTag: string | null = null;
+
+  if (args.tag) {
+    releaseTag = args.tag;
+  } else if (version.includes("alpha")) {
+    releaseTag = "alpha";
+  } else if (version.includes("beta")) {
+    releaseTag = "beta";
+  } else if (version.includes("rc")) {
+    releaseTag = "rc";
+  }
+  step(`Publishing ${target}...`);
+
+  try {
+    await run(
+      "pnpm",
+      [
+        "publish",
+        ...(releaseTag ? ["--tag", releaseTag] : []),
+        "--access",
+        "public",
+        "--publish-branch",
+        "master"
+      ],
+      {
+        cwd: targetRoot
+      }
+    );
+
+    console.log(chalk.green(`Successfully published ${target}@v${version}`));
+  } catch (error) {
+    if (error.stderr.match(/previously published/)) {
+      console.log(chalk.red(`Skipping already published: ${target}`));
+    } else {
+      throw error;
+    }
+  }
+}
 
 async function commitCode(version: string) {
-  // 检测是否进行了代码改变
+  // check change code commit
   const { stdout } = await run("git", ["diff"], { stdio: "pipe" });
   if (stdout) {
-    step("\n提交修改内容...");
+    step("\nCommitting release code...");
     await run("git", ["add", "-A"]);
     await run("git", ["commit", "-m", `release: v${version}`]);
     await run("git", ["push"]);
   } else {
-    console.log(chalk.yellow(`当前没有需要提交的代码！`));
+    console.log(chalk.yellow("No changes to commit."));
   }
-  end("提交修改内容结束");
 }
 
 async function createTag(version: string) {
-  step("\n创建Tag并提交...");
+  step("\nCommitting git tag...");
   await run("git", ["tag", `v${version}`]);
   await run("git", ["push", "origin", `refs/tags/v${version}`]);
-  end("创建Tag并提交完成");
 }

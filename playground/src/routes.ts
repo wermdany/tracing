@@ -19,5 +19,10 @@ export const routes: RouteItem[] = [
     key: "/init",
     label: "初始化",
     element: lazy(() => import("./pages/init"))
+  },
+  {
+    key: "/web-click",
+    label: "点击事件（web-click）",
+    element: lazy(() => import("./pages/web-click"))
   }
 ];

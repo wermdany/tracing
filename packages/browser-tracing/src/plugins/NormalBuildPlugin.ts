@@ -1,4 +1,4 @@
-import type { TrackerPlugin, TrackerCore, StoreProfile } from "@tracker/core";
+import type { TracingPlugin, TracingCore, StoreProfile } from "@tracing/core";
 import {
   getPathName,
   getReferrer,
@@ -9,7 +9,7 @@ import {
   getUrl,
   getTimezoneOffset,
   getViewportWidth
-} from "@tracker/shared";
+} from "@tracing/shared";
 
 interface BuildFormatParams {
   header: Record<string, any>;
@@ -22,8 +22,8 @@ export interface NormalBuildPluginConfig {
   headers: Record<string, StoreProfile>;
 }
 
-export function NormalBuildPlugin(config: Partial<NormalBuildPluginConfig>): TrackerPlugin {
-  let tracker: TrackerCore;
+export function NormalBuildPlugin(config: Partial<NormalBuildPluginConfig>): TracingPlugin {
+  let tracing: TracingCore;
 
   const { formatBuild, headers } = config;
 
@@ -42,7 +42,7 @@ export function NormalBuildPlugin(config: Partial<NormalBuildPluginConfig>): Tra
   return {
     name: "NormalBuildPlugin",
     init(ctx) {
-      tracker = ctx;
+      tracing = ctx;
 
       const useHeaders = headers ? headers : defaultHeaders;
 
@@ -55,7 +55,7 @@ export function NormalBuildPlugin(config: Partial<NormalBuildPluginConfig>): Tra
     build: {
       order: "pre",
       handler(event, record) {
-        const header = tracker.header.get();
+        const header = tracing.header.get();
 
         const defaultFormat = {
           header,

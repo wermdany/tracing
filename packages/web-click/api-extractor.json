@@ -1,15 +1,15 @@
 {
   "extends": "../../api-extractor.json",
-  "mainEntryPointFilePath": "./dist/packages/browser-tracker/src/index.d.ts",
+  "mainEntryPointFilePath": "./dist/packages/web-click/src/index.d.ts",
   "dtsRollup": {
-    "publicTrimmedFilePath": "./dist/browser-tracker.d.ts"
+    "publicTrimmedFilePath": "./dist/web-click.d.ts"
   },
   "compiler": {
     "overrideTsconfig": {
       "compilerOptions": {
-        "baseUrl": "packages/browser-tracker/dist/",
+        "baseUrl": "packages/web-click/dist/",
         "paths": {
-          "@tracker/*": ["packages/*/src"]
+          "@tracing/*": ["packages/*/src"]
         }
       },
       "include": ["global.d.ts", "packages/*/src/**/*.ts"],
