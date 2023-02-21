@@ -1,21 +1,21 @@
 {
-  "name": "@tracing/web-click",
+  "name": "browser-tracing",
   "version": "0.0.1",
   "private": false,
   "lib": true,
-  "description": "@tracing/web-click",
+  "description": "@tracing/browser-tracing",
   "main": "index.js",
-  "module": "dist/web-click.esm-bundler.js",
-  "types": "dist/web-click.d.ts",
+  "module": "dist/browser-tracing.esm-bundler.js",
+  "types": "dist/browser-tracing.d.ts",
   "sideEffects": false,
   "author": "wermdany <https://github.com/wermdany>",
-  "license": "MIT",
+  "license": "ISC",
   "files": [
     "dist",
     "index.js"
   ],
   "buildOptions": {
-    "name": "TracingWebClick",
+    "name": "BrowserTracing",
     "formats": [
       "esm-bundler",
       "esm-browser",
@@ -26,22 +26,22 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wermdany/tracing.git",
-    "directory": "packages/web-click"
+    "directory": "packages/browser-tracing"
   },
   "bugs": {
     "url": "https://github.com/wermdany/tracing/issues"
   },
-  "homepage": "https://github.com/wermdany/tracing/tree/master/packages/web-click#readme",
+  "homepage": "https://github.com/wermdany/tracing/tree/master/packages/browser-tracing#readme",
   "keywords": [
+    "collect",
     "tracker",
     "report",
-    "collect",
     "FE",
-    "web",
-    "browser"
+    "web"
   ],
   "dependencies": {
     "@tracing/core": "0.0.1",
-    "@tracing/shared": "0.0.1"
+    "@tracing/shared": "0.0.1",
+    "@tracing/web-click": "workspace:^0.0.1"
   }
 }

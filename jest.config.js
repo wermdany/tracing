@@ -28,7 +28,7 @@ module.exports = {
   watchPathIgnorePatterns: ["/node_modules/", "/dist/", "/.git/", "/packages/example/"],
   moduleFileExtensions: ["ts", "tsx", "js", "json"],
   moduleNameMapper: {
-    "^@tracker/(.*?)$": "<rootDir>/packages/$1/src"
+    "^@tracing/(.*?)$": "<rootDir>/packages/$1/src"
   },
   rootDir: __dirname,
   testMatch: ["<rootDir>/packages/**/__tests__/**/*spec.[jt]s?(x)"]

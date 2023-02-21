@@ -1,9 +1,9 @@
 {
-  "name": "@tracker/core",
+  "name": "@tracing/core",
   "version": "0.0.1",
   "private": false,
   "lib": true,
-  "description": "@tracker/core",
+  "description": "@tracing/core",
   "main": "index.js",
   "module": "dist/core.esm-bundler.js",
   "types": "dist/core.d.ts",
@@ -15,7 +15,7 @@
     "index.js"
   ],
   "buildOptions": {
-    "name": "TrackerCore",
+    "name": "TracingCore",
     "formats": [
       "esm-bundler",
       "esm-browser",
@@ -25,13 +25,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wermdany/tracker.git",
+    "url": "git+https://github.com/wermdany/tracing.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/wermdany/tracker/issues"
+    "url": "https://github.com/wermdany/tracing/issues"
   },
-  "homepage": "https://github.com/wermdany/tracker/tree/master/packages/core#readme",
+  "homepage": "https://github.com/wermdany/tracing/tree/master/packages/core#readme",
   "keywords": [
     "tracker",
     "report",
@@ -41,6 +41,6 @@
     "browser"
   ],
   "dependencies": {
-    "@tracker/shared": "0.0.1"
+    "@tracing/shared": "0.0.1"
   }
 }

@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { createBrowserTracker } from "@tracker/browser-tracker";
+import { createBrowserTracing } from "browser-tracing";
 
 import { useEffect, useRef } from "react";
 import { Space, Button } from "antd";
@@ -12,10 +12,10 @@ const config = {
 } as const;
 
 const Init: FC = () => {
-  const tracker = useRef<any>();
+  const tracing = useRef<any>();
   useEffect(() => {
-    tracker.current = createBrowserTracker({ ...config });
-    return () => tracker.current.destroy();
+    tracing.current = createBrowserTracing({ ...config });
+    return () => tracing.current.destroy();
   }, []);
 
   let number = 1;
@@ -27,7 +27,7 @@ const Init: FC = () => {
       <Space>
         <Button
           onClick={() => {
-            tracker.current.report("test", { a: number++ });
+            tracing.current.report("test", { a: number++ });
           }}
         >
           发送成功请求

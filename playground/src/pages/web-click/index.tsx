@@ -3,14 +3,14 @@ import type { FC } from "react";
 import { useEffect } from "react";
 import { Button, Typography, Input } from "antd";
 
-import { createBrowserTracker } from "@tracker/browser-tracker";
-import { WebClickPlugin } from "@tracker/web-click";
+import { createBrowserTracing } from "browser-tracing";
+import { WebClickPlugin } from "@tracing/web-click";
 
 const Link = Typography.Link;
 
 const WebClick: FC = () => {
   useEffect(() => {
-    const collect = createBrowserTracker({
+    const collect = createBrowserTracing({
       url: "apis/success",
       plugins: [WebClickPlugin()]
     });

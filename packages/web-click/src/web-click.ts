@@ -1,4 +1,4 @@
-import type { TrackerPlugin, Logger, TrackerCore } from "@tracker/core";
+import type { TracingPlugin, Logger, TracingCore } from "@tracing/core";
 
 import {
   getElementTagName,
@@ -7,7 +7,7 @@ import {
   getElementClassName,
   getElementSelector,
   getElementPath
-} from "@tracker/shared";
+} from "@tracing/shared";
 
 export interface WebClickPluginConfig {
   document: HTMLElement;
@@ -17,7 +17,7 @@ export interface WebClickPluginConfig {
   genRecord: (target: HTMLElement) => Record<string, any>;
 }
 
-export function WebClickPlugin(inputConfig?: Partial<WebClickPluginConfig>): TrackerPlugin {
+export function WebClickPlugin(inputConfig?: Partial<WebClickPluginConfig>): TracingPlugin {
   const config: WebClickPluginConfig = {
     document: document.body,
     watchElement: ["button", "a", "input", "textarea"],
@@ -27,7 +27,7 @@ export function WebClickPlugin(inputConfig?: Partial<WebClickPluginConfig>): Tra
     ...inputConfig
   };
 
-  let core: TrackerCore;
+  let core: TracingCore;
 
   const elementIsWatch = (element: HTMLElement, level: number): HTMLElement | undefined => {
     const tagName = getElementTagName(element) as keyof HTMLElementTagNameMap;

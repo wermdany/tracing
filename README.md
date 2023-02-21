@@ -1,25 +1,25 @@
-<h1 align="center">Tracker</h1>
+<h1 align="center">Tracing</h1>
 
-Tracker 是一个用于处理前端埋点的 SDK，它拥有丰富的 Hooks 来保证其灵活性，可以让您根据自己具体需求，编写或组装插件，以实现您各种复杂需求
+Tracing 是一个用于处理前端埋点的 SDK，它拥有丰富的 Hooks 来保证其灵活性，可以让您根据自己具体需求，编写或组装插件，以实现您各种复杂需求
 
 ## 使用
 
-Tracker 追求`高灵活`和`易使用`，所以提供必要的 Hooks 以 Plugin 形式来保证灵活性，这部分充分参考了 [Rollup](https://github.com/rollup/rollup/blob/master/src/utils/PluginDriver.ts) 设计思想，并且会提供一个拥有全部功能的默认包，来保证易用性
+Tracing 追求`高灵活`和`易使用`，所以提供必要的 Hooks 以 Plugin 形式来保证灵活性，这部分充分参考了 [Rollup](https://github.com/rollup/rollup/blob/master/src/utils/PluginDriver.ts) 设计思想，并且会提供一个拥有全部功能的默认包，来保证易用性
 
 ### 使用全部能力
 
 ```sh
 
-pnpm install @tracker/browser-tracker
+pnpm install browser-tracing
 
 ```
 
 引入到项目中后
 
 ```typescript
-import { createBrowserTracker } from "@tracker/browser-tracker";
+import { createBrowserTracing } from "browser-tracing";
 
-export const tracker = createBrowserTracker({
+export const tracing = createBrowserTracing({
   url: "/apis/success",
   xhrResponseType: "json",
   xhrTimeout: 1000,
@@ -31,27 +31,27 @@ export const tracker = createBrowserTracker({
 
 ### 定制功能
 
-Tracker 核心原理是 Core + Plugin，Core 是一个处理各种 Hooks 的执行器，Plugin 为使用 Hook 来实现一个最小完备的功能
+Tracing 核心原理是 Core + Plugin，Core 是一个处理各种 Hooks 的执行器，Plugin 为使用 Hook 来实现一个最小完备的功能
 
 因此定制功能应为 Core 加您需要的 Plugin，如下：
 
 ```sh
 
-pnpm install @tracker/core @tracker/web-click
+pnpm install @tracing/core @tracing/web-click
 
 ```
 
 随后
 
 ```typescript
-import { TrackerCore } from "@tracker/core";
-import { webClick } from "@tracker/web-click";
+import { TracingCore } from "@tracing/core";
+import { webClick } from "@tracing/web-click";
 
-const collect = new TrackerCore({
+const collect = new TracingCore({
   plugins: [webClick()] //其他插件...
 });
 
-collect.init(); // tracker 已启动
+collect.init(); // tracing 已启动
 ```
 
 ## 编写一个 Plugin
@@ -61,9 +61,9 @@ collect.init(); // tracker 已启动
 ```typescript
 export interface FunctionPlugins {
   // 启动时
-  setup: (this: PluginContext, initConfig: TrackerCoreConfig) => void;
+  setup: (this: PluginContext, initConfig: TracingCoreConfig) => void;
   // 初始化完成
-  init: (this: PluginContext, ctx: TrackerCore) => void;
+  init: (this: PluginContext, ctx: TracingCore) => void;
   // 触发一个数据报告
   report: (this: PluginContext, event: string, record: Record<string, any>) => void;
   // 组装合并需要发送的数据
@@ -72,16 +72,16 @@ export interface FunctionPlugins {
   beforeSend: (this: PluginContext, event: string, build: Record<string, any>) => boolean | void | null;
   // 发送具体实现
   send: (this: PluginContext, event: string, build: Record<string, any>) => boolean | void | null;
-  // 销毁 tracker 实例前操作
-  beforeDestroy: (this: PluginContext, ctx: TrackerCore) => any;
-  // 销毁 tracker 实例具体操作
-  destroy: (this: PluginContext, ctx: TrackerCore) => void;
+  // 销毁 tracing 实例前操作
+  beforeDestroy: (this: PluginContext, ctx: TracingCore) => any;
+  // 销毁 tracing 实例具体操作
+  destroy: (this: PluginContext, ctx: TracingCore) => void;
 }
 ```
 
 这里有一个图解，能够更加便捷您理解流程
 
-![HooksFlow](./images/TrackerHooksFlow.jpg)
+![HooksFlow](./images/TracingHooksFlow.jpg)
 
 ### Plugin Hooks 的上下文
 
@@ -112,9 +112,9 @@ interface Logger {
 每一个 Plugin Hooks 都可以写成对象形式，同时提供一个 order 属性，来决定它的执行优先级
 
 ```ts
-import type { TrackerPlugin } from "@tracker/core";
+import type { TracingPlugin } from "@tracing/core";
 
-export function myPlugin(): TrackerPlugin {
+export function myPlugin(): TracingPlugin {
   return {
     name: "myPlugin",
     setup: {
@@ -156,7 +156,7 @@ Hooks 有很多执行方式，最常见的就是单纯的调用，像 Vue 的生
 
 ### 基于 Event
 
-Tracker 会拥有非常多的监听，每一个监听定义为一个事件，拥有一个 name ，这点在 report 这个 Hook 就有表示，每一个 Event 都应是独立的、收敛的、一致的
+Tracing 会拥有非常多的监听，每一个监听定义为一个事件，拥有一个 name ，这点在 report 这个 Hook 就有表示，每一个 Event 都应是独立的、收敛的、一致的
 
 每一个 Event 都应该表示一个监听不能重复，是一个个独立个体
 
@@ -186,15 +186,15 @@ pnpm run test:tsc
 
 ```
 
-Tracker 使用了 husky 来强制校验，不然无法提交 commit
+Tracing 使用了 husky 来强制校验，不然无法提交 commit
 
-如果可以的话，请编写完善的单元测试，Tracker 使用 [jest](https://jestjs.io/) 来处理单元测试
+如果可以的话，请编写完善的单元测试，Tracing 使用 [jest](https://jestjs.io/) 来处理单元测试
 
 同时可以在编写时运行 `pnpm run test:watch` 这样会根据您的编写来自动运行单元测试
 
 ## 打包产物
 
-Tracker 参考了 Vue 打包提供了多种打包产物主要有以下
+Tracing 参考了 Vue 打包提供了多种打包产物主要有以下
 
 1. `cjs`
 

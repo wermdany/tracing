@@ -1,4 +1,4 @@
-# @tracker/web-click
+# @tracing/web-click
 
 提供页面点击事件监听
 
@@ -6,15 +6,15 @@
 
 ```sh
 
-pnpm install @tracker/browser-tracker @tracker/web-click
+pnpm install browser-tracing @tracing/web-click
 
 ```
 
 ```ts
-import { createBrowserTracker } from "@tracker/browser-tracker";
-import { WebClickPlugin } from "@tracker/web-click";
+import { createBrowserTracing } from "browser-tracing";
+import { WebClickPlugin } from "@tracing/web-click";
 
-const collect = createBrowserTracker({
+const collect = createBrowserTracing({
   url: "apis/success",
   plugins: [WebClickPlugin()] // 页面点击事件已应用
 });
@@ -41,10 +41,10 @@ interface WebClickPluginConfig {
 可以通过手动触发来解决
 
 ```ts
-import { createBrowserTracker } from "@tracker/browser-tracker";
-import { WebClickPlugin, EventName, defaultGenRecord } from "@tracker/web-click";
+import { createBrowserTracing } from "browser-tracing";
+import { WebClickPlugin, EventName, defaultGenRecord } from "@tracing/web-click";
 
-const collect = createBrowserTracker({
+const collect = createBrowserTracing({
   url: "apis/success",
   plugins: [WebClickPlugin()] // 页面点击事件已应用
 });

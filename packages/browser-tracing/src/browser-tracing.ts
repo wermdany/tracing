@@ -1,12 +1,12 @@
-import type { PartialOmit } from "@tracker/shared";
-import type { TrackerCoreConfig } from "@tracker/core";
+import type { PartialOmit } from "@tracing/shared";
+import type { TracingCoreConfig } from "@tracing/core";
 import type { NormalPluginConfig } from "./plugins";
 
-import { TrackerCore } from "@tracker/core";
+import { TracingCore } from "@tracing/core";
 
 import { createNormalPlugin } from "./plugins";
 
-export function createBrowserTracker(config: PartialOmit<NormalPluginConfig & TrackerCoreConfig, "url">) {
+export function createBrowserTracing(config: PartialOmit<NormalPluginConfig & TracingCoreConfig, "url">) {
   const normalPlugins = createNormalPlugin(config);
 
   if (config.plugins) {
@@ -15,7 +15,7 @@ export function createBrowserTracker(config: PartialOmit<NormalPluginConfig & Tr
     config.plugins = normalPlugins;
   }
 
-  const tc = new TrackerCore(config);
+  const tc = new TracingCore(config);
 
   tc.init();
 

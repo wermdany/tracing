@@ -18,7 +18,7 @@
     "types": ["jest"],
     "rootDir": ".",
     "paths": {
-      "@tracker/*": ["packages/*/src"]
+      "@tracing/*": ["packages/*/src"]
     }
   },
   "include": ["global.d.ts", "packages/*/src/", "test-utils/*"],

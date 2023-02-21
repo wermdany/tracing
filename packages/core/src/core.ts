@@ -1,4 +1,4 @@
-import type { TrackerCoreConfig } from "./config";
+import type { TracingCoreConfig } from "./config";
 import type { Store } from "./store";
 
 import { createStore } from "./store";
@@ -6,18 +6,18 @@ import { PluginDriver } from "./plugin";
 import { createInitConfig } from "./config";
 import { createLogger } from "./logger";
 
-export class TrackerCore {
+export class TracingCore {
   [key: string]: any;
 
   private initialized = false;
 
   private pluginDriver;
-  private config: TrackerCoreConfig;
+  private config: TracingCoreConfig;
 
   public logger;
   public header!: Store<"header">;
 
-  constructor(config: Partial<TrackerCoreConfig>) {
+  constructor(config: Partial<TracingCoreConfig>) {
     this.config = createInitConfig(config);
     this.logger = createLogger("core", this.config);
 
@@ -40,7 +40,7 @@ export class TrackerCore {
 
   public report(event: string, record: Record<string, any>) {
     if (!this.initialized) {
-      __DEV__ && this.logger.warn('"TrackerCore" Not initialized, please execute after initialization');
+      __DEV__ && this.logger.warn('"TracingCore" Not initialized, please execute after initialization');
       return;
     }
 
