@@ -42,6 +42,6 @@
   "dependencies": {
     "@tracing/core": "0.0.1",
     "@tracing/shared": "0.0.1",
-    "@tracing/web-click": "workspace:^0.0.1"
+    "@tracing/web-click": "0.0.1"
   }
 }
