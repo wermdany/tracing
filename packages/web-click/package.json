@@ -1,6 +1,6 @@
 {
   "name": "@tracing/web-click",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "lib": true,
   "description": "@tracing/web-click",
@@ -41,7 +41,7 @@
     "browser"
   ],
   "dependencies": {
-    "@tracing/core": "0.0.1",
-    "@tracing/shared": "0.0.1"
+    "@tracing/core": "0.0.2",
+    "@tracing/shared": "0.0.2"
   }
 }

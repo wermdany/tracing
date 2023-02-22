@@ -1,6 +1,6 @@
 {
   "name": "browser-tracing",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "lib": true,
   "description": "@tracing/browser-tracing",
@@ -40,8 +40,8 @@
     "web"
   ],
   "dependencies": {
-    "@tracing/core": "0.0.1",
-    "@tracing/shared": "0.0.1",
-    "@tracing/web-click": "0.0.1"
+    "@tracing/core": "0.0.2",
+    "@tracing/shared": "0.0.2",
+    "@tracing/web-click": "0.0.2"
   }
 }

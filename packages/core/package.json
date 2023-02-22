@@ -1,6 +1,6 @@
 {
   "name": "@tracing/core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "lib": true,
   "description": "@tracing/core",
@@ -41,6 +41,6 @@
     "browser"
   ],
   "dependencies": {
-    "@tracing/shared": "0.0.1"
+    "@tracing/shared": "0.0.2"
   }
 }
