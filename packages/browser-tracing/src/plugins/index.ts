@@ -8,17 +8,13 @@ import type { WebClickPluginConfig } from "@tracing/web-click";
 import { WebClickPlugin } from "@tracing/web-click";
 
 export interface NormalPluginConfig extends NormalSendPluginConfig, NormalBuildPluginConfig {
-  webClick?: Partial<WebClickPluginConfig>;
+  webClick?: Partial<WebClickPluginConfig> | false;
 }
 
-export function createNormalPlugin(
-  config: Partial<NormalPluginConfig> = {
-    webClick: {}
-  }
-) {
+export function createNormalPlugin(config: Partial<NormalPluginConfig>) {
   const plugins = [NormalSendPlugin(config), NormalBuildPlugin(config)];
 
-  if (config.webClick) {
+  if (config.webClick !== false) {
     plugins.push(WebClickPlugin(config.webClick));
   }
 

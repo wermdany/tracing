@@ -6,7 +6,9 @@ import { TracingCore } from "@tracing/core";
 
 import { createNormalPlugin } from "./plugins";
 
-export function createBrowserTracing(config: PartialOmit<NormalPluginConfig & TracingCoreConfig, "url">) {
+export type BrowserTracingConfig = PartialOmit<NormalPluginConfig & TracingCoreConfig, "url">;
+
+export function createBrowserTracing(config: BrowserTracingConfig) {
   const normalPlugins = createNormalPlugin(config);
 
   if (config.plugins) {
