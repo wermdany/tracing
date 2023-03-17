@@ -1,18 +1,17 @@
-name: CI
+name: github release
 on:
   push:
-    branches:
-      - "**"
-  pull_request:
-    branches:
-      - "master"
+    tags:
+      - "v*"
 jobs:
-  CI:
+  release-tag:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Checkout Repository Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -26,11 +25,7 @@ jobs:
       - name: Installing Dependencies
         run: pnpm install
 
-      - name: Running Eslint
-        run: pnpm eslint
-
-      - name: Running TSC
-        run: pnpm test:tsc
-
-      - name: Running Test
-        run: pnpm test:coverage
+      - name: Create GitHub Release
+        run: pnpm release-tag --workflows --tag ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

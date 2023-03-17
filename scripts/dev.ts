@@ -1,12 +1,9 @@
-import minimist from "minimist";
 import chalk from "chalk";
 import { watch } from "rollup";
 
-import { targets, canIBuildTargets, removePreBuild } from "./utils";
+import { targets, canIBuildTargets, removePreBuild, args } from "./utils";
 import { createRollupConfigs } from "./rollup";
 import { generateDTS } from "./dts";
-
-const args = minimist(process.argv.slice(2));
 
 const inputTargets = args._;
 

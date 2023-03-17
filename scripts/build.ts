@@ -5,16 +5,13 @@
 import type { OutputOptions } from "rollup";
 
 import path from "node:path";
-import minimist from "minimist";
 import fs from "fs-extra";
+import chalk from "chalk";
 import { rollup } from "rollup";
 
-import { targets, rootJoin, removePreBuild, canIBuildTargets } from "./utils";
+import { targets, rootJoin, removePreBuild, canIBuildTargets, args } from "./utils";
 import { generateDTS } from "./dts";
 import { createRollupConfigs } from "./rollup";
-import chalk from "chalk";
-
-const args = minimist(process.argv.slice(2));
 
 const inputTargets = args._;
 

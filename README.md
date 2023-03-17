@@ -81,7 +81,7 @@ export interface FunctionPlugins {
 
 这里有一个图解，能够更加便捷您理解流程
 
-![HooksFlow](./images/TracingHooksFlow.jpg)
+![HooksFlow](.github/TrackerHooksFlow.jpg)
 
 ### Plugin Hooks 的上下文
 
@@ -172,7 +172,7 @@ Tracing 会拥有非常多的监听，每一个监听定义为一个事件，拥
 
 同时拥有一个基于 Vite 演练场，你只需要运行 `pnpm run dev` 和 `pnpm run playground` 就会打开开发模式，同时运行演练场项目，你在新建项目里面的任何修改都会迅速的作用到演两场项目中
 
-如果您 Fork 此项目，自己使用，运行 `pnpm run release` 可以提供引导，便携的选择版本，随后发布至 npm
+如果您 Fork 此项目，自己使用，运行 `pnpm run publish` 可以提供引导，便携的选择版本，随后发布至 npm
 
 当您完成了您的 Plugin 开发，请保证 通过以下命令
 
