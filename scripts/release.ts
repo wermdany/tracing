@@ -82,10 +82,10 @@ async function release(targets: string[]) {
   step("\nGenerating changelog...");
   await run("pnpm", ["run", "changelog"]);
 
-  // publish to npm
+  // push commit to github
   await commitCode(version);
 
-  // push commit to github
+  // publish to npm
   for (const target of targets) {
     await publishPackage(target, version);
   }

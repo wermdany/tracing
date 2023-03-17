@@ -1,14 +1,28 @@
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import readline from "node:readline";
 
 import fs from "fs-extra";
 import chalk from "chalk";
-import readline from "readline";
+import minimist from "minimist";
+import { config } from "dotenv";
 
 /** 项目根目录 */
 export const root = fileURLToPath(new URL("..", import.meta.url));
 
+export const args = minimist(process.argv.slice(2));
+
+export const envFilePath = "~/.env.token";
+
 export const globalExtensionsFile = "globalExtensions.ts";
+
+export async function getLocalEnv(): Promise<Record<string, any>> {
+  return (
+    config({
+      path: envFilePath
+    }).parsed || {}
+  );
+}
 
 /**
  * 生成基于项目根目录的路径
