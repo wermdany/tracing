@@ -17,15 +17,15 @@ interface BuildFormatParams {
   event: string;
 }
 
-export interface NormalBuildPluginConfig {
+export interface BuildPluginConfig {
   formatBuild: (params: BuildFormatParams) => Record<string, any>;
   headers: Record<string, StoreProfile>;
 }
 
-export function NormalBuildPlugin(config: Partial<NormalBuildPluginConfig>): TracingPlugin {
+export function BuildPlugin(config?: Partial<BuildPluginConfig>): TracingPlugin {
   let tracing: TracingCore;
 
-  const { formatBuild, headers } = config;
+  const { formatBuild, headers } = config || {};
 
   const defaultHeaders = {
     path: getPathName,
@@ -40,7 +40,7 @@ export function NormalBuildPlugin(config: Partial<NormalBuildPluginConfig>): Tra
   };
 
   return {
-    name: "NormalBuildPlugin",
+    name: "tracing:build",
     init(ctx) {
       tracing = ctx;
 

@@ -51,6 +51,7 @@
     "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-terser": "^0.2.1",
     "@types/conventional-changelog": "^3.1.1",
+    "@types/events": "^3.0.0",
     "@types/fs-extra": "^9.0.13",
     "@types/glob": "^7.2.0",
     "@types/jest": "^29.2.4",

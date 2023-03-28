@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test core output modules should core output modules 1`] = `
+[
+  "createStore",
+  "createLogger",
+  "TracingCore",
+  "version",
+]
+`;

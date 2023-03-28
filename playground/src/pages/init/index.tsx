@@ -1,15 +1,18 @@
 import type { FC } from "react";
+import type { BrowserTracingConfig } from "browser-tracing";
 import { createBrowserTracing } from "browser-tracing";
 
 import { useEffect, useRef } from "react";
 import { Space, Button } from "antd";
 import axios from "axios";
 
-const config = {
+const config: BrowserTracingConfig = {
   url: "/apis/success",
-  xhrResponseType: "json",
-  xhrTimeout: 1000
-} as const;
+  middleware: [],
+  xhr: {
+    includes: ["browser-click"]
+  }
+};
 
 const Init: FC = () => {
   const tracing = useRef<any>();

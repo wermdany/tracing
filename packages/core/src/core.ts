@@ -10,6 +10,7 @@ export class TracingCore {
   [key: string]: any;
 
   private initialized = false;
+  private destroyed = false;
 
   private pluginDriver;
   private config: TracingCoreConfig;
@@ -44,6 +45,11 @@ export class TracingCore {
       return;
     }
 
+    if (this.destroyed) {
+      __DEV__ && this.logger.warn('"TracingCore" has been destroyed and you can\'t do anything now');
+      return;
+    }
+
     this.pluginDriver.hookSequentialSync("report", [event, record]);
 
     this.build(event, record);
@@ -71,5 +77,7 @@ export class TracingCore {
     this.pluginDriver.hookSequentialSync("destroy", [this]);
 
     this.header.clear();
+
+    this.destroyed = true;
   }
 }

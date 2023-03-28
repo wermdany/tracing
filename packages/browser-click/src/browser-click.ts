@@ -9,7 +9,7 @@ import {
   getElementPath
 } from "@tracing/shared";
 
-export interface WebClickPluginConfig {
+export interface BrowserClickPluginConfig {
   document: HTMLElement;
   watchElement: Array<keyof HTMLElementTagNameMap>;
   watchAttrs: string[];
@@ -17,11 +17,11 @@ export interface WebClickPluginConfig {
   genRecord: (target: HTMLElement) => Record<string, any>;
 }
 
-export function WebClickPlugin(inputConfig?: Partial<WebClickPluginConfig>): TracingPlugin {
-  const config: WebClickPluginConfig = {
+export function BrowserClickPlugin(inputConfig?: Partial<BrowserClickPluginConfig>): TracingPlugin {
+  const config: BrowserClickPluginConfig = {
     document: document.body,
     watchElement: ["button", "a", "input", "textarea"],
-    watchAttrs: ["auto-watch-web-click"],
+    watchAttrs: ["auto-watch-browser-click"],
     watchLevel: 1,
     genRecord: defaultGenRecord,
     ...inputConfig
@@ -64,7 +64,7 @@ export function WebClickPlugin(inputConfig?: Partial<WebClickPluginConfig>): Tra
 
     const record = config.genRecord(watchEl);
 
-    core.report(EventName, record);
+    core.report(BrowserClickEvent, record);
   };
 
   const unWatch = () => {
@@ -72,7 +72,7 @@ export function WebClickPlugin(inputConfig?: Partial<WebClickPluginConfig>): Tra
   };
 
   return {
-    name: "web-click",
+    name: "tracing:browser-click",
     init(ctx) {
       core = ctx;
       watch(this.logger);
@@ -99,4 +99,4 @@ export function defaultGenRecord(target: HTMLElement) {
   return globalRecord;
 }
 
-export const EventName = "web-click";
+export const BrowserClickEvent = "browser-click";

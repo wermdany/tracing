@@ -1,4 +1,4 @@
-# @tracing/web-click
+# @tracing/browser-click
 
 提供页面点击事件监听
 
@@ -6,16 +6,16 @@
 
 ```sh
 
-pnpm install @tracing/core @tracing/web-click
+pnpm install @tracing/core @tracing/browser-click
 
 ```
 
 ```ts
 import { TracingCore } from "@tracing/core";
-import { WebClickPlugin } from "@tracing/web-click";
+import { BrowserClickPlugin } from "@tracing/browser-click";
 
 const collect = new TracingCore({
-  plugins: [WebClickPlugin()] // 页面点击事件已应用
+  plugins: [BrowserClickPlugin()] // 页面点击事件已应用
 });
 
 collect.init();
@@ -24,7 +24,7 @@ collect.init();
 ## 配置项
 
 ```ts
-interface WebClickPluginConfig {
+interface BrowserClickPluginConfig {
   document: HTMLElement;
   watchElement: Array<keyof HTMLElementTagNameMap>;
   watchAttrs: string[];
@@ -46,10 +46,10 @@ interface WebClickPluginConfig {
 
 ```ts
 import { TracingCore } from "@tracing/core";
-import { WebClickPlugin, EventName, defaultGenRecord } from "@tracing/web-click";
+import { BrowserClickPlugin, BrowserClickEvent, defaultGenRecord } from "@tracing/browser-click";
 
 const collect = new TracingCore({
-  plugins: [WebClickPlugin()]
+  plugins: [BrowserClickPlugin()]
 });
 
 collect.init();
@@ -58,7 +58,7 @@ const element = document.createElement("div");
 
 const record = defaultGenRecord(element);
 
-collect.report(EventName, record); // 自定义发送一个 web-click report
+collect.report(BrowserClickEvent, record); // 自定义发送一个 browser-click report
 ```
 
 ### watchElement
@@ -71,7 +71,7 @@ collect.report(EventName, record); // 自定义发送一个 web-click report
 ### watchAttrs
 
 - Type: `string[]` 选填
-- Default: `["auto-watch-web-click"]`
+- Default: `["auto-watch-browser-click"]`
 
 当元素上有这个属性时也会进行收集
 
@@ -82,7 +82,7 @@ collect.report(EventName, record); // 自定义发送一个 web-click report
 
 监听等级
 
-有时候你想监听的元素并不直接作用在当前点击触发元素上，所以这个字段允许查找 parentElement 几次，比较典型的 antd Button 内部有一个 span 标签，而且大多数会点击到 span 上
+有时候你想监听的元素并不直接作用在当前点击触发元素上，所以这个字段允许查找 parentElement 几次，比较典型的 ant-design Button 内部有一个 span 标签，而且大多数会点击到 span 上
 
 ### genRecord
 
