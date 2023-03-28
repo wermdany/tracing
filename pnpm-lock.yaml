@@ -11,6 +11,7 @@ importers:
       '@rollup/plugin-replace': ^5.0.2
       '@rollup/plugin-terser': ^0.2.1
       '@types/conventional-changelog': ^3.1.1
+      '@types/events': ^3.0.0
       '@types/fs-extra': ^9.0.13
       '@types/glob': ^7.2.0
       '@types/jest': ^29.2.4
@@ -55,6 +56,7 @@ importers:
       '@rollup/plugin-replace': 5.0.2_rollup@3.8.0
       '@rollup/plugin-terser': 0.2.1_rollup@3.8.0
       '@types/conventional-changelog': 3.1.1
+      '@types/events': 3.0.0
       '@types/fs-extra': 9.0.13
       '@types/glob': 7.2.0
       '@types/jest': 29.2.4
@@ -92,15 +94,33 @@ importers:
       tslib: 2.4.1
       typescript: 4.9.4
 
-  packages/browser-tracing:
+  packages/browser-click:
     specifiers:
       '@tracing/core': 0.0.2
       '@tracing/shared': 0.0.2
-      '@tracing/web-click': 0.0.2
     dependencies:
       '@tracing/core': link:../core
       '@tracing/shared': link:../shared
-      '@tracing/web-click': link:../web-click
+
+  packages/browser-sender:
+    specifiers:
+      '@tracing/core': 0.0.2
+      '@tracing/shared': 0.0.2
+    dependencies:
+      '@tracing/core': link:../core
+      '@tracing/shared': link:../shared
+
+  packages/browser-tracing:
+    specifiers:
+      '@tracing/browser-click': 0.0.2
+      '@tracing/browser-sender': 0.0.2
+      '@tracing/core': 0.0.2
+      '@tracing/shared': 0.0.2
+    dependencies:
+      '@tracing/browser-click': link:../browser-click
+      '@tracing/browser-sender': link:../browser-sender
+      '@tracing/core': link:../core
+      '@tracing/shared': link:../shared
 
   packages/core:
     specifiers:
@@ -111,18 +131,11 @@ importers:
   packages/shared:
     specifiers: {}
 
-  packages/web-click:
-    specifiers:
-      '@tracing/core': 0.0.2
-      '@tracing/shared': 0.0.2
-    dependencies:
-      '@tracing/core': link:../core
-      '@tracing/shared': link:../shared
-
   playground:
     specifiers:
+      '@tracing/browser-click': workspace:*
+      '@tracing/browser-sender': workspace:*
       '@tracing/core': workspace:*
-      '@tracing/web-click': workspace:*
       '@types/react': ^18.0.15
       '@types/react-dom': ^18.0.6
       '@vitejs/plugin-react': ^3.0.0
@@ -138,8 +151,9 @@ importers:
       typescript: ^4.6.4
       vite: ^4.0.0
     dependencies:
+      '@tracing/browser-click': link:../packages/browser-click
+      '@tracing/browser-sender': link:../packages/browser-sender
       '@tracing/core': link:../packages/core
-      '@tracing/web-click': link:../packages/web-click
       antd: 5.0.7_biqbaboplfbrettd7655fr4n2y
       axios: 1.2.1
       browser-tracing: link:../packages/browser-tracing
@@ -1702,6 +1716,10 @@ packages:
 
   /@types/estree/1.0.0:
     resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
+    dev: false
+
+  /@types/events/3.0.0:
+    resolution: {integrity: sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==}
     dev: false
 
   /@types/fs-extra/9.0.13:

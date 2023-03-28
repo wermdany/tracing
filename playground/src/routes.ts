@@ -21,8 +21,13 @@ export const routes: RouteItem[] = [
     element: lazy(() => import("./pages/init"))
   },
   {
-    key: "/web-click",
-    label: "点击事件（web-click）",
-    element: lazy(() => import("./pages/web-click"))
+    key: "/browser-click",
+    label: "点击事件（browser-click）",
+    element: lazy(() => import("./pages/browser-click"))
+  },
+  {
+    key: "/browser-sender",
+    label: "发送数据（browser-sender）",
+    element: lazy(() => import("./pages/browser-sender"))
   }
 ];

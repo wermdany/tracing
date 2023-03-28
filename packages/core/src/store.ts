@@ -1,6 +1,6 @@
 import type { Logger } from "./logger";
 
-import { hasOwn, omit, transProfile } from "@tracing/shared";
+import { hasOwn, transProfile } from "@tracing/shared";
 
 export type JsonPrimitive = string | number | boolean | null;
 
@@ -38,7 +38,7 @@ export function createStore<N extends string>(
       return { ...store };
     },
     remove(key: string) {
-      store = omit(store, [key]);
+      delete store[key];
     },
     clear() {
       store = {};

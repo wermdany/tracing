@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test browser-sender -> base should output SenderError 1`] = `
+{
+  "1": "TimeOut",
+  "2": "Network",
+  "3": "Validator",
+  "4": "InvalidBuild",
+  "5": "BeaconQueue",
+  "BeaconQueue": 5,
+  "InvalidBuild": 4,
+  "Network": 2,
+  "TimeOut": 1,
+  "Validator": 3,
+}
+`;

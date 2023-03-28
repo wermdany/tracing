@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test browser-sender output modules should browser-sender output modules 1`] = `
+[
+  "SenderError",
+  "XhrSenderPlugin",
+  "createXhrSenderFactory",
+  "BeaconSenderPlugin",
+  "createBeaconSenderFactory",
+  "FetchSenderPlugin",
+  "createFetchSenderFactory",
+  "useMiddleware",
+  "ErrorRetryMiddleware",
+  "BatchSendMiddleware",
+]
+`;

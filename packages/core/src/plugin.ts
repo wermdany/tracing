@@ -27,7 +27,9 @@ export interface FunctionPlugins {
   destroy: (this: PluginContext, ctx: TracingCore) => void;
 }
 
-type ObjectHook<T, O = {}> = T | ({ handler: T; order?: "pre" | "post" | null } & O);
+export type handlerOrder = "pre" | "post" | null;
+
+type ObjectHook<T, O = {}> = T | ({ handler: T; order?: handlerOrder } & O);
 
 type MakeAsync<Fn> = Fn extends (this: infer This, ...args: infer Args) => infer Return
   ? (this: This, ...args: Args) => Return | Promise<Return>

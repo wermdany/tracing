@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test browser-tracing output modules should browser-tracing output modules 1`] = `
+[
+  "BuildPlugin",
+  "createBrowserTracing",
+  "version",
+  "SenderError",
+  "XhrSenderPlugin",
+  "createXhrSenderFactory",
+  "BeaconSenderPlugin",
+  "createBeaconSenderFactory",
+  "FetchSenderPlugin",
+  "createFetchSenderFactory",
+  "useMiddleware",
+  "ErrorRetryMiddleware",
+  "BatchSendMiddleware",
+]
+`;

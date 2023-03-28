@@ -3,17 +3,19 @@ import type { FC } from "react";
 import { useEffect } from "react";
 import { Button, Typography, Input } from "antd";
 
-import { createBrowserTracing } from "browser-tracing";
-import { WebClickPlugin } from "@tracing/web-click";
+import { TracingCore } from "@tracing/core";
+import { BuildPlugin } from "browser-tracing";
+import { BrowserClickPlugin } from "@tracing/browser-click";
 
 const Link = Typography.Link;
 
 const WebClick: FC = () => {
   useEffect(() => {
-    const collect = createBrowserTracing({
-      url: "apis/success",
-      plugins: [WebClickPlugin()]
+    const collect = new TracingCore({
+      plugins: [BrowserClickPlugin(), BuildPlugin()]
     });
+
+    collect.init();
 
     return () => {
       collect.destroy();
@@ -28,7 +30,7 @@ const WebClick: FC = () => {
           A标签
         </Link>
       </p>
-      <p auto-watch-web-click="true">自定义 Attrs</p>
+      <p auto-watch-browser-click="true">自定义 Attrs</p>
 
       <p>
         <Input placeholder="测试输入框" />

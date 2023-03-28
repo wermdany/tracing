@@ -1,0 +1,19 @@
+{
+  "extends": "../../api-extractor.json",
+  "mainEntryPointFilePath": "./dist/packages/browser-click/src/index.d.ts",
+  "dtsRollup": {
+    "publicTrimmedFilePath": "./dist/browser-click.d.ts"
+  },
+  "compiler": {
+    "overrideTsconfig": {
+      "compilerOptions": {
+        "baseUrl": "packages/browser-click/dist/",
+        "paths": {
+          "@tracing/*": ["packages/*/src"]
+        }
+      },
+      "include": ["global.d.ts", "packages/*/src/**/*.ts"],
+      "exclude": ["test-utils/*"]
+    }
+  }
+}

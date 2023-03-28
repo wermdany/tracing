@@ -9,17 +9,17 @@ import { createNormalPlugin } from "./plugins";
 export type BrowserTracingConfig = PartialOmit<NormalPluginConfig & TracingCoreConfig, "url">;
 
 export function createBrowserTracing(config: BrowserTracingConfig) {
-  const normalPlugins = createNormalPlugin(config);
+  const plugins = createNormalPlugin(config);
 
   if (config.plugins) {
-    config.plugins.unshift(normalPlugins);
+    config.plugins.unshift(plugins);
   } else {
-    config.plugins = normalPlugins;
+    config.plugins = plugins;
   }
 
-  const tc = new TracingCore(config);
+  const instance = new TracingCore(config);
 
-  tc.init();
+  instance.init();
 
-  return tc;
+  return instance;
 }

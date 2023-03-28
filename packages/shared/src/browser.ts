@@ -98,6 +98,7 @@ export function getCurrentElementSelector(
   const tagName = getElementTagName(el);
   const tagId = getElementId(el);
   const classList = getElementClassList(el);
+
   /**
    * 此时，有三种情况
    * 1. 此元素从 dom 中删除
@@ -121,6 +122,7 @@ export function getCurrentElementSelector(
   if (stopClass.length && classList.some(v => stopClass.includes(v))) {
     return `${tagName}.${classList.join(".")}`;
   }
+
   if (isPath) {
     return tagName;
   }

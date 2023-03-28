@@ -1,21 +1,21 @@
-import type { NormalSendPluginConfig } from "./NormalSendPlugin";
-import { NormalSendPlugin } from "./NormalSendPlugin";
-import type { NormalBuildPluginConfig } from "./NormalBuildPlugin";
+import type { BuildPluginConfig } from "./BuildPlugin";
+import { BuildPlugin } from "./BuildPlugin";
 
-import { NormalBuildPlugin } from "./NormalBuildPlugin";
+import type { SenderPluginConfig } from "./SenderPlugin";
+import { SenderPlugin } from "./SenderPlugin";
 
-import type { WebClickPluginConfig } from "@tracing/web-click";
-import { WebClickPlugin } from "@tracing/web-click";
+import type { BrowserClickPluginConfig } from "@tracing/browser-click";
+import { BrowserClickPlugin } from "@tracing/browser-click";
 
-export interface NormalPluginConfig extends NormalSendPluginConfig, NormalBuildPluginConfig {
-  webClick?: Partial<WebClickPluginConfig> | false;
+export interface NormalPluginConfig extends BuildPluginConfig, SenderPluginConfig {
+  webClick: Partial<BrowserClickPluginConfig> | false;
 }
 
 export function createNormalPlugin(config: Partial<NormalPluginConfig>) {
-  const plugins = [NormalSendPlugin(config), NormalBuildPlugin(config)];
+  const plugins = [BuildPlugin(config), ...SenderPlugin(config)];
 
   if (config.webClick !== false) {
-    plugins.push(WebClickPlugin(config.webClick));
+    plugins.push(BrowserClickPlugin(config.webClick));
   }
 
   return plugins;
