@@ -96,26 +96,26 @@ importers:
 
   packages/browser-click:
     specifiers:
-      '@tracing/core': 0.0.2
-      '@tracing/shared': 0.0.2
+      '@tracing/core': 0.0.3
+      '@tracing/shared': 0.0.3
     dependencies:
       '@tracing/core': link:../core
       '@tracing/shared': link:../shared
 
   packages/browser-sender:
     specifiers:
-      '@tracing/core': 0.0.2
-      '@tracing/shared': 0.0.2
+      '@tracing/core': 0.0.3
+      '@tracing/shared': 0.0.3
     dependencies:
       '@tracing/core': link:../core
       '@tracing/shared': link:../shared
 
   packages/browser-tracing:
     specifiers:
-      '@tracing/browser-click': 0.0.2
-      '@tracing/browser-sender': 0.0.2
-      '@tracing/core': 0.0.2
-      '@tracing/shared': 0.0.2
+      '@tracing/browser-click': 0.0.3
+      '@tracing/browser-sender': 0.0.3
+      '@tracing/core': 0.0.3
+      '@tracing/shared': 0.0.3
     dependencies:
       '@tracing/browser-click': link:../browser-click
       '@tracing/browser-sender': link:../browser-sender
@@ -124,7 +124,7 @@ importers:
 
   packages/core:
     specifiers:
-      '@tracing/shared': 0.0.2
+      '@tracing/shared': 0.0.3
     dependencies:
       '@tracing/shared': link:../shared
 

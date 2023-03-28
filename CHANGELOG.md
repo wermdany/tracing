@@ -1,3 +1,9 @@
+## [0.0.3](https://github.com/wermdany/tracing/compare/v0.0.2...v0.0.3) (2023-03-28)
+
+### Features
+
+- perfect CI/CD ([30a2632](https://github.com/wermdany/tracing/commit/30a263222b9e411a794028c5a171dbc1688f69ae))
+
 ## 0.0.2 (2023-02-22)
 
 ### Bug Fixes
