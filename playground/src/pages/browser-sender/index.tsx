@@ -85,7 +85,7 @@ const instanceError = new TracingCore({
 instanceSuccess.init();
 instanceError.init();
 
-const Sender: FC = () => {
+const BrowserSender: FC = () => {
   return (
     <>
       <p>XHR 发送</p>
@@ -242,4 +242,4 @@ const Sender: FC = () => {
   );
 };
 
-export default Sender;
+export default BrowserSender;

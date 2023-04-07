@@ -29,5 +29,10 @@ export const routes: RouteItem[] = [
     key: "/browser-sender",
     label: "发送数据（browser-sender）",
     element: lazy(() => import("./pages/browser-sender"))
+  },
+  {
+    key: "/browser-resource",
+    label: "监控资源加载（browser-resource)",
+    element: lazy(() => import("./pages/browser-resource"))
   }
 ];

@@ -9,12 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tracing/core": "workspace:*",
-    "@tracing/browser-sender": "workspace:*",
     "@tracing/browser-click": "workspace:*",
+    "@tracing/browser-resource": "workspace:*",
+    "@tracing/browser-sender": "workspace:*",
+    "@tracing/core": "workspace:*",
     "antd": "^5.0.0",
     "axios": "^1.2.1",
     "browser-tracing": "workspace:*",
+    "rc-motion": "^2.6.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.4.5",

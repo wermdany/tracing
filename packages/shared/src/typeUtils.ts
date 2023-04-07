@@ -7,3 +7,5 @@ export type RemoveIndexSignature<T> = {
 };
 
 export type PartialOmit<T extends Record<string, any>, K extends keyof T> = Partial<Omit<T, K>> & Pick<T, K>;
+
+export type Includes<T = string> = T[] | ((arg: T) => boolean) | RegExp;

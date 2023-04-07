@@ -9,7 +9,7 @@ import { BrowserClickPlugin } from "@tracing/browser-click";
 
 const Link = Typography.Link;
 
-const WebClick: FC = () => {
+const BrowserClick: FC = () => {
   useEffect(() => {
     const collect = new TracingCore({
       plugins: [BrowserClickPlugin(), BuildPlugin()]
@@ -42,4 +42,4 @@ const WebClick: FC = () => {
   );
 };
 
-export default WebClick;
+export default BrowserClick;

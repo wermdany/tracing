@@ -19,6 +19,8 @@ export const isBool = isType<boolean>("Boolean");
 
 export const isNum = isType<number>("Number");
 
+export const isRegexp = isType<RegExp>("RegExp");
+
 export const isUndefined = isType<undefined>("Undefined");
 
 export const isDate = isType<Date>("Date");
