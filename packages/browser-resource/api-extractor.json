@@ -1,0 +1,19 @@
+{
+  "extends": "../../api-extractor.json",
+  "mainEntryPointFilePath": "./dist/packages/browser-resource/src/index.d.ts",
+  "dtsRollup": {
+    "publicTrimmedFilePath": "./dist/browser-resource.d.ts"
+  },
+  "compiler": {
+    "overrideTsconfig": {
+      "compilerOptions": {
+        "baseUrl": "packages/browser-resource/dist/",
+        "paths": {
+          "@tracing/*": ["packages/*/src"]
+        }
+      },
+      "include": ["global.d.ts", "packages/*/src/**/*.ts"],
+      "exclude": ["test-utils/*"]
+    }
+  }
+}

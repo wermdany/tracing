@@ -1,14 +1,17 @@
+import { isRegexp } from "./is";
+import type { Includes } from "./typeUtils";
+
 /**
  * 根据一个 object 返回 url query
  */
-export function qs(obj: Record<string, any>, prefix: string): string {
+export function qs(obj: Record<string, any>, prefix?: string): string {
   const qsArr = [];
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       qsArr.push(`${key}=${obj[key]}`);
     }
   }
-  return prefix + qsArr.join("&");
+  return (prefix || "") + qsArr.join("&");
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -38,7 +41,7 @@ export function pick<T extends Record<string, any>, K extends keyof T>(origin: T
   return ret as Pick<T, K>;
 }
 
-export function hasOwn(obj: Record<string, any>, key: keyof any) {
+export function hasOwn<T extends Record<string, any>>(obj: T, key: keyof T) {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }
 
@@ -56,4 +59,47 @@ export function transProfile<T extends Record<string, any>>(origin: T): Record<s
     }
   }
   return finish;
+}
+
+function baseInOrOut<T extends string>(type: Includes<T>, isIn: boolean) {
+  if (typeof type == "function") {
+    return type;
+  }
+  if (isRegexp(type)) {
+    return (arg: T) => (isIn ? type.test(arg) : !type.test(arg));
+  }
+
+  return (arg: T) => (isIn ? type.includes(arg) : !type.includes(arg));
+}
+
+export function includes<T extends string>(type: Includes<T>): (arg: T) => boolean {
+  return baseInOrOut(type, true);
+}
+
+export function excludes<T extends string>(type: Includes<T>): (arg: T) => boolean {
+  return baseInOrOut(type, false);
+}
+
+export function pickParse<T extends Record<string, any>, K extends keyof T & string>(
+  obj: T,
+  keys: K[],
+  parse: (arg: T[K]) => T[K],
+  omit: K[] = []
+) {
+  const finish: Record<string, any> = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key) && !omit.includes(key as unknown as K)) {
+      if (keys.includes(key as unknown as K)) {
+        finish[key] = parse(obj[key as unknown as K]);
+      } else {
+        finish[key] = obj[key];
+      }
+    }
+  }
+  return finish as T;
+}
+
+export function formatNumber(number: number, precision = 2) {
+  const weight = 10 ** precision;
+  return Math.floor(number * weight) / weight;
 }

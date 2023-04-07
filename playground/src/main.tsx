@@ -9,11 +9,9 @@ import "./main.less";
 const el = document.getElementById("root")!;
 
 ReactDOM.createRoot(el).render(
-  <React.StrictMode>
-    <ConfigProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ConfigProvider>
-  </React.StrictMode>
+  <ConfigProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </ConfigProvider>
 );

@@ -1,0 +1,47 @@
+{
+  "name": "@tracing/browser-resource",
+  "version": "0.0.2",
+  "private": false,
+  "lib": true,
+  "description": "@tracing/browser-resource",
+  "main": "index.js",
+  "module": "dist/browser-resource.esm-bundler.js",
+  "types": "dist/browser-resource.d.ts",
+  "sideEffects": false,
+  "author": "wermdany <https://github.com/wermdany>",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "buildOptions": {
+    "name": "TracingBrowserResource",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "cjs",
+      "global"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wermdany/tracing.git",
+    "directory": "packages/browser-resource"
+  },
+  "bugs": {
+    "url": "https://github.com/wermdany/tracing/issues"
+  },
+  "homepage": "https://github.com/wermdany/tracing/tree/master/packages/browser-resource#readme",
+  "keywords": [
+    "tracker",
+    "report",
+    "collect",
+    "FE",
+    "web",
+    "browser"
+  ],
+  "dependencies": {
+    "@tracing/core": "0.0.2",
+    "@tracing/shared": "0.0.2"
+  }
+}
