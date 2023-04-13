@@ -9,21 +9,24 @@ export interface NormalPlugin {
 }
 
 export interface FunctionPlugins {
-  // 同步 顺序执行
+  // Sync Sequential
   setup: (this: PluginContext, initConfig: TracingCoreConfig) => void;
-  // 同步 顺序执行
+  // Sync Sequential
   init: (this: PluginContext, ctx: TracingCore) => void;
-  // 同步 顺序执行
-  report: (this: PluginContext, event: string, record: Record<string, any>) => void;
-  // 同步 循环合并
-  build: (this: PluginContext, event: string, record: Record<string, any>) => Record<string, any>;
-  // 同步 熔断执行
+  // Sync ChainMerge
+  build: (
+    this: PluginContext,
+    event: string,
+    record: Record<string, any>,
+    meta?: unknown
+  ) => Record<string, any>;
+  // Sync Bail
   beforeSend: (this: PluginContext, event: string, build: Record<string, any>) => boolean | void | null;
-  // 同步 熔断执行
+  // Sync Bail
   send: (this: PluginContext, event: string, build: Record<string, any>) => boolean | void | null;
-  // 异步 并行执行
+  // Async Parallel
   beforeDestroy: (this: PluginContext, ctx: TracingCore) => any;
-  // 同步 顺序执行
+  // Sync Sequential
   destroy: (this: PluginContext, ctx: TracingCore) => void;
 }
 
@@ -38,13 +41,13 @@ type MakeAsync<Fn> = Fn extends (this: infer This, ...args: infer Args) => infer
 export type AsyncPluginHooks = "beforeDestroy";
 
 export type SyncPluginHooks = Exclude<keyof FunctionPlugins, AsyncPluginHooks>;
-// 按照顺序执行
-export type SequentialPluginHooks = "setup" | "init" | "report" | "destroy";
-// 同时执行
+// run as sequential
+export type SequentialPluginHooks = "setup" | "init" | "destroy";
+// run as parallel
 export type ParallelPluginHooks = "beforeDestroy";
-// 只要有一个错误，则直接返回
+// if return then stop
 export type BailPluginHooks = "beforeSend" | "send";
-// 需要按照顺序循环合并值
+// run as merge
 export type ChainMergeHooks = Exclude<
   keyof FunctionPlugins,
   SequentialPluginHooks | ParallelPluginHooks | BailPluginHooks

@@ -64,8 +64,6 @@ export interface FunctionPlugins {
   setup: (this: PluginContext, initConfig: TracingCoreConfig) => void;
   // 初始化完成
   init: (this: PluginContext, ctx: TracingCore) => void;
-  // 触发一个数据报告
-  report: (this: PluginContext, event: string, record: Record<string, any>) => void;
   // 组装合并需要发送的数据
   build: (this: PluginContext, event: string, record: Record<string, any>) => Record<string, any>;
   // 发送数据前，主要用于阻止发送
@@ -141,7 +139,7 @@ Hooks 有很多执行方式，最常见的就是单纯的调用，像 Vue 的生
 
 如果按照执行方式可分为：
 
-1. 顺序执行 Hook 如 setup 、init、report、destroy，这些会按照 Hook 顺序，一个一个执行
+1. 顺序执行 Hook 如 setup 、init、destroy，这些会按照 Hook 顺序，一个一个执行
 2. 熔断执行 Hook 如 beforeSend、 send ，这些在遇到第一个返回 false 的就不会再执行后边的
 3. 同步执行 Hook 如 beforeDestroy ，这个会同时执行，只有全部返回才会执行下一个 Hook
 4. 顺序合并 Hook 如 build ，这个会把每一个 Hook 的返回值，合并到一起
@@ -156,7 +154,7 @@ Hooks 有很多执行方式，最常见的就是单纯的调用，像 Vue 的生
 
 ### 基于 Event
 
-Tracing 会拥有非常多的监听，每一个监听定义为一个事件，拥有一个 name ，这点在 report 这个 Hook 就有表示，每一个 Event 都应是独立的、收敛的、一致的
+Tracing 会拥有非常多的监听，每一个监听定义为一个事件，拥有一个 name ，这点在 build 这个 Hook 就有表示，每一个 Event 都应是独立的、收敛的、一致的
 
 每一个 Event 都应该表示一个监听不能重复，是一个个独立个体
 
