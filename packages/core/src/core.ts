@@ -39,7 +39,7 @@ export class TracingCore {
     this.pluginDriver.hookSequentialSync("init", [this]);
   }
 
-  public report(event: string, record: Record<string, any>) {
+  public report(event: string, record: Record<string, any>, meta?: unknown) {
     if (!this.initialized) {
       __DEV__ && this.logger.warn('"TracingCore" Not initialized, please execute after initialization');
       return;
@@ -50,13 +50,11 @@ export class TracingCore {
       return;
     }
 
-    this.pluginDriver.hookSequentialSync("report", [event, record]);
-
-    this.build(event, record);
+    this.build(event, record, meta);
   }
 
-  private build(event: string, record: Record<string, any>) {
-    const build = this.pluginDriver.hookChainMergeSync("build", [event, record], {});
+  private build(event: string, record: Record<string, any>, meta?: unknown) {
+    const build = this.pluginDriver.hookChainMergeSync("build", [event, record, meta], {});
 
     this.send(event, build);
   }
