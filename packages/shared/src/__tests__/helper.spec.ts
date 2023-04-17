@@ -1,15 +1,4 @@
-import {
-  qs,
-  noop,
-  omit,
-  pick,
-  hasOwn,
-  transProfile,
-  includes,
-  excludes,
-  pickParse,
-  formatNumber
-} from "../helper";
+import { qs, noop, omit, pick, hasOwn, transProfile, choice, pickParse, formatNumber } from "../helper";
 
 describe("test stared helper -> qs", () => {
   it("should return url query", () => {
@@ -63,29 +52,17 @@ describe("test stared helper -> transProfile", () => {
   });
 });
 
-describe("test stared helper -> includes & excludes", () => {
-  it("should includes use array", () => {
-    expect(includes(["1", "2"])("1")).toBe(true);
-  });
-
-  it("should includes use function", () => {
-    expect(includes(arg => ["1", "2"].includes(arg))("1")).toBe(true);
-  });
-
-  it("should includes use regexp", () => {
-    expect(includes(/^on/)("onClick")).toBe(true);
-  });
-
+describe("test stared helper -> choice", () => {
   it("should excludes use array", () => {
-    expect(excludes(["1", "2"])("1")).toBe(false);
+    expect(choice(["1", "2"])("1")).toBe(true);
   });
 
   it("should excludes use function", () => {
-    expect(excludes(arg => !["1", "2"].includes(arg))("1")).toBe(false);
+    expect(choice(arg => !["1", "2"].includes(arg))("1")).toBe(false);
   });
 
   it("should excludes use regexp", () => {
-    expect(excludes(/^on/)("onClick")).toBe(false);
+    expect(choice(/^on/)("onClick")).toBe(true);
   });
 });
 

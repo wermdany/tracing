@@ -2,6 +2,7 @@ import type { FunctionPlugins, TracingPlugin } from "../plugin";
 import type { TracingCore } from "../core";
 import type { TracingCoreConfig } from "../config";
 
+import { noop } from "@tracing/shared";
 import { mergeConfig, PluginDriver } from "../plugin";
 import { createLogger } from "../logger";
 
@@ -84,24 +85,24 @@ describe("test PluginDriver inside Api", () => {
         name: "1",
         init: {
           order: "post",
-          handler: () => ({})
+          handler: noop
         }
       },
       {
         name: "2",
-        init: () => ({})
+        init: noop
       },
       {
         name: "3",
         init: {
           order: "pre",
-          handler: () => ({})
+          handler: noop
         }
       },
       {
         name: "4",
         init: {
-          handler: () => ({})
+          handler: noop
         }
       }
     ]);
@@ -168,6 +169,22 @@ describe("test PluginDriver core", () => {
     pd.hookSequentialSync("setup", [coreConfig]);
 
     expect(flat).toEqual(resolve);
+  });
+
+  it("hookSequentialSync Api return function", () => {
+    const flat: number[] = [];
+    const resolve = [1, 2, 3, 4];
+    const plugins = genPlugins(
+      "setup",
+      resolve.map(item => () => {
+        flat.push(item);
+        return () => item;
+      })
+    );
+    const pd = PluginDriver(plugins, {}, logger);
+    const effects = pd.hookSequentialSync("setup", [coreConfig]);
+
+    expect(effects.map(effect => effect())).toEqual(resolve);
   });
 
   it("hookBail Api", () => {
