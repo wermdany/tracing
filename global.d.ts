@@ -16,3 +16,12 @@ declare namespace jest {
     toHaveConsoleError(module: string, received: string): R;
   }
 }
+
+// in tsconfig.json not install node context but api need use node global
+// eslint-disable-next-line no-var
+declare var global: typeof globalThis;
+
+// add api to Window
+declare interface Window {
+  msCrypto: Crypto;
+}

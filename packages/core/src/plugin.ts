@@ -1,3 +1,4 @@
+import type { AnyFun } from "@tracing/shared";
 import type { Logger } from "./logger";
 import type { TracingCore } from "./core";
 import type { TracingCoreConfig } from "./config";
@@ -12,7 +13,7 @@ export interface FunctionPlugins {
   // Sync Sequential
   setup: (this: PluginContext, initConfig: TracingCoreConfig) => void;
   // Sync Sequential
-  init: (this: PluginContext, ctx: TracingCore) => void;
+  init: (this: PluginContext, ctx: TracingCore) => AnyFun | void;
   // Sync ChainMerge
   build: (
     this: PluginContext,
@@ -63,9 +64,14 @@ export type TracingPlugin = Partial<PluginHooks> & NormalPlugin;
 
 export function PluginDriver(plugins: TracingPlugin[], options: Partial<TracingCoreConfig>, logger: Logger) {
   const sortedPlugins: Map<keyof FunctionPlugins, TracingPlugin[]> = new Map();
-  const pluginContexts: ReadonlyMap<TracingPlugin, PluginContext> = new Map(
+  const pluginContexts: Map<TracingPlugin, PluginContext> = new Map(
     plugins.map(plugin => [plugin, createContext(plugin, options)])
   );
+
+  function destroyPluginDriver() {
+    sortedPlugins.clear();
+    pluginContexts.clear();
+  }
 
   async function runHook<H extends AsyncPluginHooks>(
     hookName: H,
@@ -158,6 +164,7 @@ export function PluginDriver(plugins: TracingPlugin[], options: Partial<TracingC
     runHook,
     runHookSync,
     getSortedValidatePlugins,
+    destroyPluginDriver,
     async hookParallel<H extends ParallelPluginHooks & AsyncPluginHooks>(
       hookName: H,
       args: Parameters<FunctionPlugins[H]>
@@ -174,9 +181,15 @@ export function PluginDriver(plugins: TracingPlugin[], options: Partial<TracingC
       hookName: H,
       args: Parameters<FunctionPlugins[H]>
     ) {
+      const effects: AnyFun[] = [];
       for (const plugin of getSortedPlugins(hookName)) {
-        runHookSync(hookName, args, plugin);
+        const effect = runHookSync(hookName, args, plugin);
+        if (effect && typeof effect == "function") {
+          effects.push(effect);
+        }
       }
+
+      return effects;
     },
     hookBail<H extends BailPluginHooks & SyncPluginHooks>(
       hookName: H,

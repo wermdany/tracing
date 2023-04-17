@@ -1,5 +1,5 @@
 import { isRegexp } from "./is";
-import type { Includes } from "./typeUtils";
+import type { Choice } from "./typeUtils";
 
 /**
  * 根据一个 object 返回 url query
@@ -61,23 +61,16 @@ export function transProfile<T extends Record<string, any>>(origin: T): Record<s
   return finish;
 }
 
-function baseInOrOut<T extends string>(type: Includes<T>, isIn: boolean) {
+export function choice<T extends string>(type: Choice<T>): (arg: T) => boolean {
   if (typeof type == "function") {
     return type;
   }
+
   if (isRegexp(type)) {
-    return (arg: T) => (isIn ? type.test(arg) : !type.test(arg));
+    return (arg: T) => type.test(arg);
   }
 
-  return (arg: T) => (isIn ? type.includes(arg) : !type.includes(arg));
-}
-
-export function includes<T extends string>(type: Includes<T>): (arg: T) => boolean {
-  return baseInOrOut(type, true);
-}
-
-export function excludes<T extends string>(type: Includes<T>): (arg: T) => boolean {
-  return baseInOrOut(type, false);
+  return (arg: T) => type.includes(arg);
 }
 
 export function pickParse<T extends Record<string, any>, K extends keyof T & string>(
@@ -99,7 +92,7 @@ export function pickParse<T extends Record<string, any>, K extends keyof T & str
   return finish as T;
 }
 
-export function formatNumber(number: number, precision = 2) {
+export function formatNumber(number: number, precision = 0) {
   const weight = 10 ** precision;
   return Math.floor(number * weight) / weight;
 }

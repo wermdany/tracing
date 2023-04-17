@@ -1,3 +1,4 @@
+import type { AnyFun } from "@tracing/shared";
 import type { TracingCoreConfig } from "./config";
 import type { Store } from "./store";
 
@@ -14,6 +15,7 @@ export class TracingCore {
 
   private pluginDriver;
   private config: TracingCoreConfig;
+  private effects: AnyFun[] = [];
 
   public logger;
   public header!: Store<"header">;
@@ -36,7 +38,7 @@ export class TracingCore {
     this.header = createStore("header", {});
 
     this.initialized = true;
-    this.pluginDriver.hookSequentialSync("init", [this]);
+    this.effects = this.pluginDriver.hookSequentialSync("init", [this]);
   }
 
   public report(event: string, record: Record<string, any>, meta?: unknown) {
@@ -71,11 +73,15 @@ export class TracingCore {
   }
 
   public async destroy() {
+    await Promise.all(this.effects.map(effect => effect()));
+    this.effects.length = 0;
+
     await this.pluginDriver.hookParallel("beforeDestroy", [this]);
+
     this.pluginDriver.hookSequentialSync("destroy", [this]);
 
     this.header.clear();
-
+    this.pluginDriver.destroyPluginDriver();
     this.destroyed = true;
   }
 }
