@@ -168,7 +168,9 @@ Tracing 会拥有非常多的监听，每一个监听定义为一个事件，拥
 
 如果您想编写一个新的 Plugin 可以运行 `pnpm run bootstrap` 它会引导您快速创建一个插件模版
 
-同时拥有一个基于 Vite 演练场，你只需要运行 `pnpm run dev` 和 `pnpm run playground` 就会打开开发模式，同时运行演练场项目，你在新建项目里面的任何修改都会迅速的作用到演两场项目中
+同时拥有一个基于 Vite 演练场，你只需要运行 `pnpm run playground:watch` 就会运行演练场项目，把 `browser-tracing` 和 `/^@tracing\/(.*)/` 的包指向项目源码，使你在项目里面的任何修改都会迅速的作用到演练场项目中
+
+同样的，运行 `pnpm run playground:dev` 则会把包资源指向打包后的项目代码
 
 如果您 Fork 此项目，自己使用，运行 `pnpm run publish` 可以提供引导，便携的选择版本，随后发布至 npm
 
