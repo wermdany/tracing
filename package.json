@@ -21,7 +21,8 @@
     "test:coverage": "jest --coverage",
     "test:tsc": "tsc --noEmit",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && prettier --write CHANGELOG.md",
-    "playground": "cd playground && pnpm run dev"
+    "playground:dev": "pnpm --filter playground dev",
+    "playground:watch": "pnpm --filter playground watch"
   },
   "author": "wermdany <https://github.com/wermdany>",
   "license": "MIT",

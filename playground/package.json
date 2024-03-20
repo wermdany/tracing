@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "watch": "vite --mode watch",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -13,22 +14,22 @@
     "@tracing/browser-resource": "workspace:*",
     "@tracing/browser-sender": "workspace:*",
     "@tracing/core": "workspace:*",
-    "antd": "^5.0.0",
-    "axios": "^1.2.1",
+    "antd": "^5.15.3",
+    "axios": "^1.6.8",
     "browser-tracing": "workspace:*",
-    "rc-motion": "^2.6.3",
+    "rc-motion": "^2.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router": "^6.4.5",
-    "react-router-dom": "^6.4.5"
+    "react-router": "^6.22.3",
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.6",
-    "@vitejs/plugin-react": "^3.0.0",
+    "@types/react": "^18.2.67",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
     "consola": "^2.15.3",
-    "less": "^4.1.3",
-    "typescript": "^4.6.4",
-    "vite": "^4.0.0"
+    "less": "^4.2.0",
+    "typescript": "^4.9.5",
+    "vite": "^5.1.6"
   }
 }
