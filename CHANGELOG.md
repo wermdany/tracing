@@ -1,3 +1,15 @@
+## [0.0.4](https://github.com/wermdany/tracing/compare/v0.0.3...v0.0.4) (2024-03-20)
+
+### Bug Fixes
+
+- **shared:** solve cookie storage test ([b18776b](https://github.com/wermdany/tracing/commit/b18776b4336293b313a51b08cdc4080a260ae964))
+
+### Features
+
+- **core:** init hooks support clear side effect ([17fbc62](https://github.com/wermdany/tracing/commit/17fbc62c01772255e65a3e4acb213af6c9bb6daf))
+- **core:** remove "report" hooks and add report meta ([9d8181f](https://github.com/wermdany/tracing/commit/9d8181f558f393a01a131141bf4c827529a1fe11))
+- create "browser-resource" plugin ([3d00296](https://github.com/wermdany/tracing/commit/3d00296601324285861912c623d978c2e5ad350a))
+
 ## [0.0.3](https://github.com/wermdany/tracing/compare/v0.0.2...v0.0.3) (2023-03-28)
 
 ### Features

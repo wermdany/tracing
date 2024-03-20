@@ -1,6 +1,6 @@
 {
   "name": "@tracing/browser-resource",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "private": false,
   "lib": true,
   "description": "@tracing/browser-resource",
@@ -41,7 +41,7 @@
     "browser"
   ],
   "dependencies": {
-    "@tracing/core": "0.0.2",
-    "@tracing/shared": "0.0.2"
+    "@tracing/core": "0.0.4",
+    "@tracing/shared": "0.0.4"
   }
 }
