@@ -106,8 +106,7 @@ const Init: FC = () => {
                   >
                     #{logs.length - i}
                   </Tag>
-                  [{log.time}] {log.event} —{" "}
-                  {JSON.stringify(log.build).substring(0, 40)}
+                  [{log.time}] {log.event} — {JSON.stringify(log.build).substring(0, 40)}
                 </Paragraph>
               ))
             )}

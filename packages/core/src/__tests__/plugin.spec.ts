@@ -77,28 +77,28 @@ describe("test PluginDriver inside Api", () => {
   });
 
   it("getSortedValidatePlugins", () => {
-    const sorted = getSortedValidatePlugins("init", [
+    const sorted = getSortedValidatePlugins("prepare", [
       {
         name: "1",
-        init: {
+        prepare: {
           order: "post",
           handler: noop
         }
       },
       {
         name: "2",
-        init: noop
+        prepare: noop
       },
       {
         name: "3",
-        init: {
+        prepare: {
           order: "pre",
           handler: noop
         }
       },
       {
         name: "4",
-        init: {
+        prepare: {
           handler: noop
         }
       }
@@ -124,7 +124,7 @@ describe("test PluginDriver core", () => {
       [
         {
           name: "testPlugin",
-          setup() {
+          start() {
             this.logger.info(this.meta.version);
           }
         }
@@ -133,7 +133,7 @@ describe("test PluginDriver core", () => {
       logger
     );
 
-    expect(pd.hookSequentialSync("setup", [ctx])).toHaveConsoleInfo("testPlugin", __VERSION__);
+    expect(pd.hookSequentialSync("start", [ctx])).toHaveConsoleInfo("testPlugin", __VERSION__);
   });
 
   it("hookParallel Api", () => {
@@ -157,13 +157,13 @@ describe("test PluginDriver core", () => {
     const flat: number[] = [];
     const resolve = [1, 2, 3, 4];
     const plugins = genPlugins(
-      "setup",
+      "start",
       resolve.map(item => () => {
         flat.push(item);
       })
     );
     const pd = PluginDriver(plugins, {}, logger);
-    pd.hookSequentialSync("setup", [ctx]);
+    pd.hookSequentialSync("start", [ctx]);
 
     expect(flat).toEqual(resolve);
   });
@@ -172,14 +172,14 @@ describe("test PluginDriver core", () => {
     const flat: number[] = [];
     const resolve = [1, 2, 3, 4];
     const plugins = genPlugins(
-      "setup",
+      "start",
       resolve.map(item => () => {
         flat.push(item);
         return () => item;
       })
     );
     const pd = PluginDriver(plugins, {}, logger);
-    const effects = pd.hookSequentialSync("setup", [ctx]);
+    const effects = pd.hookSequentialSync("start", [ctx]);
 
     expect(effects.map(effect => effect())).toEqual(resolve);
   });

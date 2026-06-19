@@ -271,7 +271,7 @@ export function BrowserScrollPlugin(inputConfig?: Partial<BrowserScrollPluginCon
 
   return {
     name: "tracing:browser-scroll",
-    init(ctx) {
+    prepare(ctx) {
       core = ctx;
       if (!isWatching) {
         startWatch();

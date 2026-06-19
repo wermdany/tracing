@@ -42,7 +42,7 @@ export function BuildPlugin(config?: Partial<BuildPluginConfig>): TracingPlugin 
 
   return {
     name: "tracing:build",
-    init(ctx) {
+    prepare(ctx) {
       tracing = ctx;
 
       const useHeaders = headers ? headers : defaultHeaders;
