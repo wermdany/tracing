@@ -83,7 +83,7 @@ export function BrowserClickPlugin(inputConfig?: Partial<BrowserClickPluginConfi
 
   return {
     name: "tracing:browser-click",
-    init(ctx) {
+    prepare(ctx) {
       core = ctx;
       if (!isWatching) {
         watch(this.logger);

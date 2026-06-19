@@ -100,7 +100,8 @@ const BrowserClick: FC = () => {
                   >
                     #{logs.length - i}
                   </Tag>
-                  [{log.time}] {log.event} — {log.build?.body?.elementTagName} {log.build?.body?.elementClassName}
+                  [{log.time}] {log.event} — {log.build?.body?.elementTagName}{" "}
+                  {log.build?.body?.elementClassName}
                 </Paragraph>
               ))
             )}

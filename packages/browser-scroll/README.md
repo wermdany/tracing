@@ -62,24 +62,24 @@ interface BrowserScrollPluginConfig {
 
 ```ts
 interface ScrollData {
-  totalDwellTime: number;        // 滚动总停留时长(ms)
-  scrollSegments: number;        // 滚动段数
-  maxScrollDepth: number;        // 最大滚动深度(px)
+  totalDwellTime: number; // 滚动总停留时长(ms)
+  scrollSegments: number; // 滚动段数
+  maxScrollDepth: number; // 最大滚动深度(px)
   maxScrollDepthPercent: number; // 最大滚动深度百分比
-  pageHeight: number;            // 页面总高度
-  viewportHeight: number;        // 视口高度
+  pageHeight: number; // 页面总高度
+  viewportHeight: number; // 视口高度
   elements: ScrollElementInfo[]; // 被滚动元素信息
 }
 
 interface ScrollElementInfo {
-  elementTagName: string;       // 元素标签名
-  elementClassName: string;     // 元素类名
-  elementSelector: string;      // 元素选择器
-  elementPath: string;          // 元素路径
-  maxScrollDepth: number;       // 该元素最大滚动深度
-  maxScrollDepthPercent: number;// 该元素最大滚动深度百分比
-  scrollHeight: number;         // 该元素滚动高度
-  clientHeight: number;         // 该元素可视高度
+  elementTagName: string; // 元素标签名
+  elementClassName: string; // 元素类名
+  elementSelector: string; // 元素选择器
+  elementPath: string; // 元素路径
+  maxScrollDepth: number; // 该元素最大滚动深度
+  maxScrollDepthPercent: number; // 该元素最大滚动深度百分比
+  scrollHeight: number; // 该元素滚动高度
+  clientHeight: number; // 该元素可视高度
 }
 ```
 
@@ -106,6 +106,7 @@ collect.init();
 ```
 
 上报数据中 `elements` 会包含每个被滚动元素各自的：
+
 - `elementTagName`、`elementSelector`、`elementPath` 用于定位元素
 - `maxScrollDepth`、`maxScrollDepthPercent` 基于该元素自身高度计算
 - `scrollHeight`、`clientHeight` 反映元素实际尺寸

@@ -12,9 +12,9 @@ export interface NormalPlugin {
 
 export interface FunctionPlugins {
   // Sync Sequential
-  init: (this: PluginContext, ctx: TracingCore) => void;
+  prepare: (this: PluginContext, ctx: TracingCore) => void;
   // Sync Sequential
-  setup: (this: PluginContext, ctx: TracingCore) => AnyFun | void;
+  start: (this: PluginContext, ctx: TracingCore) => AnyFun | void;
   // Sync ChainMerge
   build: (
     this: PluginContext,
@@ -44,7 +44,7 @@ export type AsyncPluginHooks = "beforeDestroy";
 
 export type SyncPluginHooks = Exclude<keyof FunctionPlugins, AsyncPluginHooks>;
 // run as sequential
-export type SequentialPluginHooks = "init" | "setup" | "destroy";
+export type SequentialPluginHooks = "prepare" | "start" | "destroy";
 // run as parallel
 export type ParallelPluginHooks = "beforeDestroy";
 // if return then stop

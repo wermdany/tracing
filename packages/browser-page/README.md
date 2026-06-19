@@ -21,20 +21,20 @@ collect.init();
 
 ## 事件
 
-| 事件名 | 说明 |
-|--------|------|
-| `page_enter` | 进入页面时上报 |
-| `page_exit` | 离开页面时上报 |
+| 事件名       | 说明           |
+| ------------ | -------------- |
+| `page-enter` | 进入页面时上报 |
+| `page-exit`  | 离开页面时上报 |
 
 ### page_enter 数据
 
 ```ts
 {
-  path: string;       // 当前页面路径
-  referrer: string;   // 来源页
-  title: string;      // 页面标题
-  url: string;        // 完整 URL
-  timestamp: number;  // 进入时间戳，用于按天聚合
+  path: string; // 当前页面路径
+  referrer: string; // 来源页
+  title: string; // 页面标题
+  url: string; // 完整 URL
+  timestamp: number; // 进入时间戳，用于按天聚合
 }
 ```
 

@@ -15,8 +15,14 @@ const elementColumns = [
   { title: "标签", dataIndex: "elementTagName", key: "tag", width: 80 },
   { title: "类名", dataIndex: "elementClassName", key: "cls", ellipsis: true, width: 120 },
   { title: "最大深度", dataIndex: "maxScrollDepth", key: "depth", width: 90 },
-  { title: "深度百分比", dataIndex: "maxScrollDepthPercent", key: "pct", width: 100, render: (v: number) => `${v}%` },
-  { title: "元素路径", dataIndex: "elementPath", key: "path", ellipsis: true },
+  {
+    title: "深度百分比",
+    dataIndex: "maxScrollDepthPercent",
+    key: "pct",
+    width: 100,
+    render: (v: number) => `${v}%`
+  },
+  { title: "元素路径", dataIndex: "elementPath", key: "path", ellipsis: true }
 ];
 
 const BrowserScroll: FC = () => {
@@ -46,7 +52,7 @@ const BrowserScroll: FC = () => {
               scrollSegments: data.scrollSegments,
               maxScrollDepth: data.maxScrollDepth,
               maxScrollDepthPercent: data.maxScrollDepthPercent,
-              elements: data.elements,
+              elements: data.elements
             };
           }
         }),
@@ -132,7 +138,8 @@ const BrowserScroll: FC = () => {
                   >
                     #{logs.length - i}
                   </Tag>
-                  [{log.time}] {log.build?.body?.maxScrollDepthPercent}% · {(log.build?.body?.elements || []).map((e: any) => e.elementTagName).join(", ")}
+                  [{log.time}] {log.build?.body?.maxScrollDepthPercent}% ·{" "}
+                  {(log.build?.body?.elements || []).map((e: any) => e.elementTagName).join(", ")}
                 </Paragraph>
               ))
             )}
@@ -190,7 +197,12 @@ const BrowserScroll: FC = () => {
                       {Array.from({ length: 10 }, (_, j) => (
                         <Paragraph
                           key={j}
-                          style={{ padding: "6px 0", borderBottom: "1px solid #f0f0f0", marginBottom: 0, fontSize: 12 }}
+                          style={{
+                            padding: "6px 0",
+                            borderBottom: "1px solid #f0f0f0",
+                            marginBottom: 0,
+                            fontSize: 12
+                          }}
                         >
                           内部嵌套内容 {j + 1} — 独立的滚动容器
                         </Paragraph>

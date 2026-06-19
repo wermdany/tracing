@@ -33,11 +33,11 @@ export class TracingCore {
       return;
     }
 
-    this.pluginDriver.hookSequentialSync("init", [this]);
+    this.pluginDriver.hookSequentialSync("prepare", [this]);
 
     this.initialized = true;
 
-    this.effects = this.pluginDriver.hookSequentialSync("setup", [this]);
+    this.effects = this.pluginDriver.hookSequentialSync("start", [this]);
   }
 
   public report(event: string, record: Record<string, any>, meta?: unknown) {

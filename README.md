@@ -60,10 +60,10 @@ collect.init(); // tracing 已启动
 
 ```typescript
 export interface FunctionPlugins {
-  // 初始化操作
-  init: (this: PluginContext, ctx: TracingCore) => void;
-  // 初始化完成，开始进行副作用操作
-  setup: (this: PluginContext, initConfig: TracingCoreConfig) => AnyFun | void ;
+  // 准备阶段，无副作用
+  prepare: (this: PluginContext, ctx: TracingCore) => void;
+  // 启动阶段，开始副作用操作，可返回清理函数
+  start: (this: PluginContext, initConfig: TracingCoreConfig) => AnyFun | void;
   // 组装合并需要发送的数据
   build: (this: PluginContext, event: string, record: Record<string, any>) => Record<string, any>;
   // 发送数据前，主要用于阻止发送
@@ -115,7 +115,7 @@ import type { TracingPlugin } from "@tracing/core";
 export function myPlugin(): TracingPlugin {
   return {
     name: "myPlugin",
-    setup: {
+    start: {
       order: "pre",
       handler(initConfig) {
         this.logger.info(initConfig);
@@ -125,7 +125,7 @@ export function myPlugin(): TracingPlugin {
 }
 ```
 
-这个插件会在 setup 中提前执行，其他生命周期类似
+这个插件会在 start 中提前执行，其他生命周期类似
 
 ### Plugin Hooks 的类型
 
@@ -139,7 +139,7 @@ Hooks 有很多执行方式，最常见的就是单纯的调用，像 Vue 的生
 
 如果按照执行方式可分为：
 
-1. 顺序执行 Hook 如 init、setup 、destroy，这些会按照 Hook 顺序，一个一个执行
+1. 顺序执行 Hook 如 prepare、start 、destroy，这些会按照 Hook 顺序，一个一个执行
 2. 熔断执行 Hook 如 beforeSend、 send ，这些在遇到第一个返回 false 的就不会再执行后边的
 3. 同步执行 Hook 如 beforeDestroy ，这个会同时执行，只有全部返回才会执行下一个 Hook
 4. 顺序合并 Hook 如 build ，这个会把每一个 Hook 的返回值，合并到一起
@@ -148,7 +148,7 @@ Hooks 有很多执行方式，最常见的就是单纯的调用，像 Vue 的生
 
 比如
 
-我需要监听所有的 fetch 请求，常见的方式就是重写一下 fetch 方法，这时候，我可以在 setup 这个 Hook 里面 重写 fetch，在 destroy 这个 Hook 重写回去，释放副作用
+我需要监听所有的 fetch 请求，常见的方式就是重写一下 fetch 方法，这时候，我可以在 start 这个 Hook 里面 重写 fetch，在 destroy 这个 Hook 重写回去，释放副作用
 
 我需要在页面离开时，发送一个数据，但是 xhr 方式放在 onbeforeunload 中会存在上报丢失，需要使用 Beacon ，此时只需要写一个 send Hook 提供比较高的 order ，这样就会在默认 xhr 发送方式之前熔断，就会使用 Beacon Api 发动数据
 

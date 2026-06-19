@@ -57,7 +57,7 @@ export function BrowserResourcePlugin(config?: Partial<ResourceConfig>): Tracing
 
   return {
     name: "tracing:browser-resource",
-    setup(ctx) {
+    start(ctx) {
       core = ctx;
       observe();
 

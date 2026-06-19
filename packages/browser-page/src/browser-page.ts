@@ -255,7 +255,7 @@ export function BrowserPagePlugin(inputConfig?: Partial<BrowserPageConfig>): Tra
 
   return {
     name: "tracing:browser-page",
-    setup(ctx) {
+    start(ctx) {
       core = ctx;
       if (!isWatching) {
         startWatch();
