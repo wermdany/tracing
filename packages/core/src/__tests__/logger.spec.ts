@@ -20,11 +20,19 @@ describe("test logger", () => {
     expect(logger.error("1", "2")).toHaveConsoleError(moduleStr, "1 2");
   });
   it("config => isLogger = false", () => {
-    const closeLogger = createLogger("", { isLogger: false });
-    // not console
-    expect(closeLogger.info("", "3", "4")).toHaveConsoleInfo(moduleStr, "1 2");
-    expect(closeLogger.warn("", "3", "4")).toHaveConsoleInfo(moduleStr, "1 2");
-    expect(closeLogger.error("", "3", "4")).toHaveConsoleInfo(moduleStr, "1 2");
+    const closeLogger = createLogger("", false);
+    const infoCalls = (console.info as jest.Mock).mock.calls.length;
+    const warnCalls = (console.warn as jest.Mock).mock.calls.length;
+    const errorCalls = (console.error as jest.Mock).mock.calls.length;
+
+    closeLogger.info("test", "3", "4");
+    expect(console.info).toHaveBeenCalledTimes(infoCalls);
+
+    closeLogger.warn("test", "3", "4");
+    expect(console.warn).toHaveBeenCalledTimes(warnCalls);
+
+    closeLogger.error("test", "3", "4");
+    expect(console.error).toHaveBeenCalledTimes(errorCalls);
   });
 
   it("throw error", () => {

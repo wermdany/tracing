@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`browser-scroll-plugin should browser-scroll output modules 1`] = `
+{
+  "BrowserScrollEvent": "browser-scroll",
+  "BrowserScrollPlugin": [Function],
+  "defaultGenRecord": [Function],
+}
+`;

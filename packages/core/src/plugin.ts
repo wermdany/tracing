@@ -1,4 +1,5 @@
 import type { AnyFun } from "@tracing/shared";
+import { hasOwn } from "@tracing/shared";
 import type { Logger } from "./logger";
 import type { TracingCore } from "./core";
 import type { TracingCoreConfig } from "./config";
@@ -11,9 +12,9 @@ export interface NormalPlugin {
 
 export interface FunctionPlugins {
   // Sync Sequential
-  setup: (this: PluginContext, initConfig: TracingCoreConfig) => void;
+  init: (this: PluginContext, ctx: TracingCore) => void;
   // Sync Sequential
-  init: (this: PluginContext, ctx: TracingCore) => AnyFun | void;
+  setup: (this: PluginContext, ctx: TracingCore) => AnyFun | void;
   // Sync ChainMerge
   build: (
     this: PluginContext,
@@ -43,7 +44,7 @@ export type AsyncPluginHooks = "beforeDestroy";
 
 export type SyncPluginHooks = Exclude<keyof FunctionPlugins, AsyncPluginHooks>;
 // run as sequential
-export type SequentialPluginHooks = "setup" | "init" | "destroy";
+export type SequentialPluginHooks = "init" | "setup" | "destroy";
 // run as parallel
 export type ParallelPluginHooks = "beforeDestroy";
 // if return then stop
@@ -230,7 +231,7 @@ export interface PluginContext {
 
 export function createContext(plugin: TracingPlugin, options: Partial<TracingCoreConfig>): PluginContext {
   return {
-    logger: createLogger(plugin.name, options),
+    logger: createLogger(plugin.name, !!options.sendLog),
     meta: {
       version: __VERSION__
     }
@@ -251,7 +252,7 @@ export function mergeConfig(defaults: Record<string, any>, overrides: Record<str
   const merged: Record<string, any> = { ...defaults };
 
   for (const key in overrides) {
-    if (!Object.prototype.hasOwnProperty.call(overrides, key)) {
+    if (!hasOwn(overrides, key)) {
       continue;
     }
 

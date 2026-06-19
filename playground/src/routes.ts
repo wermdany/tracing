@@ -34,5 +34,15 @@ export const routes: RouteItem[] = [
     key: "/browser-resource",
     label: "监控资源加载（browser-resource)",
     element: lazy(() => import("./pages/browser-resource"))
+  },
+  {
+    key: "/browser-page",
+    label: "页面停留时间（browser-page）",
+    element: lazy(() => import("./pages/browser-page"))
+  },
+  {
+    key: "/browser-scroll",
+    label: "滚动停留时间（browser-scroll）",
+    element: lazy(() => import("./pages/browser-scroll"))
   }
 ];

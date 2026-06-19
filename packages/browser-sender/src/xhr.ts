@@ -2,6 +2,7 @@ import type { TracingPlugin, handlerOrder } from "@tracing/core";
 
 import type { BaseSenderConfig, BaseSenderFactory, Ignore } from "./base";
 import { SenderError, defineBaseSenderConfig, validatorBuild, parseIgnore } from "./base";
+import { hasOwn } from "@tracing/shared";
 
 import type { MiddlewareConfig } from "./middleware";
 import { useMiddleware } from "./middleware";
@@ -55,7 +56,7 @@ export const createXhrSenderFactory: BaseSenderFactory<XhrSenderConfig> = config
     if ("setRequestHeader" in request) {
       const headers = resolveConfig.headers;
       for (const key in headers) {
-        if (Object.prototype.hasOwnProperty.call(headers, key)) {
+        if (hasOwn(headers, key)) {
           request.setRequestHeader(key, headers[key]);
         }
       }

@@ -1,13 +1,11 @@
 import type { TracingPlugin } from "./plugin";
-import type { LoggerConfig } from "./logger";
 
-export interface TracingCoreConfig extends LoggerConfig {
+export interface TracingCoreConfig {
   plugins: Array<TracingPlugin | TracingPlugin[]>;
-  sendLog: boolean;
+  sendLog: boolean | ((event: string, build: Record<string, any>) => void);
 }
 
 export const initConfig: TracingCoreConfig = {
-  isLogger: __DEV__,
   sendLog: __DEV__,
   plugins: []
 };

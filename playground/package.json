@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@tracing/browser-click": "workspace:*",
+    "@tracing/browser-page": "workspace:*",
     "@tracing/browser-resource": "workspace:*",
+    "@tracing/browser-scroll": "workspace:*",
     "@tracing/browser-sender": "workspace:*",
     "@tracing/core": "workspace:*",
     "antd": "^5.15.3",

@@ -110,6 +110,14 @@ importers:
       '@tracing/core': link:../core
       '@tracing/shared': link:../shared
 
+  packages/browser-scroll:
+    specifiers:
+      '@tracing/core': 0.0.4
+      '@tracing/shared': 0.0.4
+    dependencies:
+      '@tracing/core': link:../core
+      '@tracing/shared': link:../shared
+
   packages/browser-sender:
     specifiers:
       '@tracing/core': 0.0.4
@@ -121,11 +129,15 @@ importers:
   packages/browser-tracing:
     specifiers:
       '@tracing/browser-click': 0.0.4
+      '@tracing/browser-resource': 0.0.4
+      '@tracing/browser-scroll': 0.0.4
       '@tracing/browser-sender': 0.0.4
       '@tracing/core': 0.0.4
       '@tracing/shared': 0.0.4
     dependencies:
       '@tracing/browser-click': link:../browser-click
+      '@tracing/browser-resource': link:../browser-resource
+      '@tracing/browser-scroll': link:../browser-scroll
       '@tracing/browser-sender': link:../browser-sender
       '@tracing/core': link:../core
       '@tracing/shared': link:../shared
@@ -143,6 +155,7 @@ importers:
     specifiers:
       '@tracing/browser-click': workspace:*
       '@tracing/browser-resource': workspace:*
+      '@tracing/browser-scroll': workspace:*
       '@tracing/browser-sender': workspace:*
       '@tracing/core': workspace:*
       '@types/react': ^18.2.67
@@ -163,6 +176,7 @@ importers:
     dependencies:
       '@tracing/browser-click': link:../packages/browser-click
       '@tracing/browser-resource': link:../packages/browser-resource
+      '@tracing/browser-scroll': link:../packages/browser-scroll
       '@tracing/browser-sender': link:../packages/browser-sender
       '@tracing/core': link:../packages/core
       antd: 5.15.3_biqbaboplfbrettd7655fr4n2y

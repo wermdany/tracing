@@ -45,7 +45,7 @@ export function BrowserResourcePlugin(config?: Partial<ResourceConfig>): Tracing
     while (list.length) {
       const timing = list.shift()!;
       if (!resolveConfig.watchResource(timing)) {
-        return;
+        continue;
       }
       const record = resolveConfig.resourceTimingMeasure(timing);
 
@@ -57,13 +57,11 @@ export function BrowserResourcePlugin(config?: Partial<ResourceConfig>): Tracing
 
   return {
     name: "tracing:browser-resource",
-    init(ctx) {
+    setup(ctx) {
       core = ctx;
-
       observe();
-    },
-    beforeDestroy() {
-      disconnect();
+
+      return () => disconnect();
     }
   };
 }

@@ -7,7 +7,7 @@ import type { Choice } from "./typeUtils";
 export function qs(obj: Record<string, any>, prefix?: string): string {
   const qsArr = [];
   for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+    if (hasOwn(obj, key)) {
       qsArr.push(`${key}=${obj[key]}`);
     }
   }
@@ -20,7 +20,7 @@ export function noop() {}
 export function omit<T extends Record<string, any>, K extends keyof T>(origin: T, keys: K[]) {
   const ret: Record<string, any> = {};
   for (const key in origin) {
-    if (Object.prototype.hasOwnProperty.call(origin, key)) {
+    if (hasOwn(origin, key)) {
       if (!keys.includes(key as unknown as K)) {
         ret[key] = origin[key];
       }
@@ -32,7 +32,7 @@ export function omit<T extends Record<string, any>, K extends keyof T>(origin: T
 export function pick<T extends Record<string, any>, K extends keyof T>(origin: T, keys: K[]) {
   const ret: Record<string, any> = {};
   for (const key in origin) {
-    if (Object.prototype.hasOwnProperty.call(origin, key)) {
+    if (hasOwn(origin, key)) {
       if (keys.includes(key as unknown as K)) {
         ret[key] = origin[key];
       }
@@ -41,7 +41,7 @@ export function pick<T extends Record<string, any>, K extends keyof T>(origin: T
   return ret as Pick<T, K>;
 }
 
-export function hasOwn<T extends Record<string, any>>(obj: T, key: keyof T) {
+export function hasOwn<T extends Record<string, any>>(obj: T, key: PropertyKey): key is keyof T {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }
 
@@ -81,7 +81,7 @@ export function pickParse<T extends Record<string, any>, K extends keyof T & str
 ) {
   const finish: Record<string, any> = {};
   for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key) && !omit.includes(key as unknown as K)) {
+    if (hasOwn(obj, key) && !omit.includes(key as unknown as K)) {
       if (keys.includes(key as unknown as K)) {
         finish[key] = parse(obj[key as unknown as K]);
       } else {

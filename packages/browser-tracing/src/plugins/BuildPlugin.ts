@@ -1,5 +1,6 @@
 import type { TracingPlugin, TracingCore, StoreProfile } from "@tracing/core";
 import {
+  hasOwn,
   getPathName,
   getReferrer,
   getViewportHeight,
@@ -47,7 +48,7 @@ export function BuildPlugin(config?: Partial<BuildPluginConfig>): TracingPlugin 
       const useHeaders = headers ? headers : defaultHeaders;
 
       for (const key in useHeaders) {
-        if (Object.prototype.hasOwnProperty.call(useHeaders, key)) {
+        if (hasOwn(useHeaders, key)) {
           ctx.header.set(key, useHeaders[key]);
         }
       }
