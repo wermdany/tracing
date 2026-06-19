@@ -2,7 +2,7 @@ import { createLogger } from "../logger";
 
 const moduleStr = "core";
 
-const logger = createLogger(moduleStr);
+const logger = createLogger(moduleStr, true);
 
 describe("test logger", () => {
   it("info", () => {

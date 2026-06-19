@@ -1,26 +1,27 @@
-// import { TracingCore } from "@tracing/core";
 import { noop } from "@tracing/shared";
 import { createFetchSenderFactory } from "../fetch";
 import { SenderError } from "../base";
 
-import { mockServer } from "../../../../test-utils/mockMsw";
-
 jest.setTimeout(20000);
 
-beforeAll(() => {
-  mockServer.listen();
+beforeEach(() => {
+  globalThis.fetch = jest.fn().mockResolvedValue({
+    status: 200,
+    json: async () => ({})
+  } as any);
 });
 
-afterAll(() => {
-  mockServer.close();
+afterEach(() => {
+  delete (globalThis as any).fetch;
 });
 
 describe("test createFetchSenderFactory", () => {
   it("should not set url throw error", () => {
+    jest.restoreAllMocks();
     expect(() => createFetchSenderFactory()).toThrow();
   });
 
-  it.skip("should success build immutable", done => {
+  it("should success build immutable", done => {
     const server = createFetchSenderFactory({
       url: "/test/success"
     });
@@ -34,7 +35,11 @@ describe("test createFetchSenderFactory", () => {
     });
   });
 
-  it.skip("should Validator error build immutable", done => {
+  it("should Validator error build immutable", done => {
+    (globalThis.fetch as jest.Mock).mockResolvedValue({
+      status: 400
+    });
+
     const server = createFetchSenderFactory({
       url: "/test/error"
     });
@@ -54,7 +59,9 @@ describe("test createFetchSenderFactory", () => {
     );
   });
 
-  it.skip("should TimeOut error build immutable", () => {
+  it("should TimeOut error build immutable", done => {
+    (globalThis.fetch as jest.Mock).mockRejectedValue(new DOMException("Aborted", "AbortError"));
+
     const server = createFetchSenderFactory({
       url: "/test/timeout",
       timeout: 100
@@ -64,6 +71,9 @@ describe("test createFetchSenderFactory", () => {
     const build = { a: 1 };
     server("test", build, fn, noop);
 
-    expect(fn).toBeCalledWith();
+    setTimeout(() => {
+      expect(fn).toHaveBeenCalled();
+      done();
+    }, 50);
   });
 });

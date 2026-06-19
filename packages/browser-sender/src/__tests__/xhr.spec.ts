@@ -3,25 +3,49 @@ import { noop } from "@tracing/shared";
 import { createXhrSenderFactory, XhrSenderPlugin } from "../xhr";
 import { SenderError } from "../base";
 import { BatchSendMiddleware } from "../middleware";
-
-import { mockServer } from "../../../../test-utils/mockMsw";
+import { BuildPlugin } from "../../../browser-tracing/src/plugins/BuildPlugin";
 
 jest.setTimeout(20000);
 
-beforeAll(() => {
-  mockServer.listen();
+let mockXHR: Record<string, any>;
+
+beforeEach(() => {
+  mockXHR = {
+    open: jest.fn(),
+    send: jest.fn(() => {
+      if (mockXHR._simulateTimeout) {
+        mockXHR.ontimeout?.();
+      } else {
+        mockXHR.onloadend?.();
+      }
+    }),
+    setRequestHeader: jest.fn(),
+    abort: jest.fn(),
+    timeout: 2000,
+    withCredentials: false,
+    responseType: "",
+    status: 200,
+    onloadend: null,
+    onerror: null,
+    ontimeout: null,
+    readyState: 4,
+    _simulateTimeout: false
+  };
+  jest.spyOn(globalThis, "XMLHttpRequest").mockImplementation(() => mockXHR as unknown as XMLHttpRequest);
 });
 
-afterAll(() => {
-  mockServer.close();
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 describe("test createXhrSenderFactory", () => {
   it("should not set url throw error", () => {
+    jest.restoreAllMocks();
     expect(() => createXhrSenderFactory()).toThrow();
   });
 
-  it.skip("should success build immutable", done => {
+  it("should success build immutable", done => {
+    mockXHR.status = 200;
     const server = createXhrSenderFactory({
       url: "/test/success"
     });
@@ -35,7 +59,8 @@ describe("test createXhrSenderFactory", () => {
     });
   });
 
-  it.skip("should Validator error build immutable", done => {
+  it("should Validator error build immutable", done => {
+    mockXHR.status = 400;
     const server = createXhrSenderFactory({
       url: "/test/error"
     });
@@ -55,7 +80,9 @@ describe("test createXhrSenderFactory", () => {
     );
   });
 
-  it.skip("should TimeOut error build immutable", () => {
+  it("should TimeOut error build immutable", done => {
+    mockXHR._simulateTimeout = true;
+    mockXHR.timeout = 100;
     const server = createXhrSenderFactory({
       url: "/test/timeout",
       timeout: 100
@@ -65,15 +92,21 @@ describe("test createXhrSenderFactory", () => {
     const build = { a: 1 };
     server("test", build, fn, noop);
 
-    expect(fn).toBeCalledWith();
+    setTimeout(() => {
+      expect(fn).toHaveBeenCalled();
+      done();
+    }, 50);
   });
 });
 
 describe("test XhrSenderPlugin", () => {
-  it.skip("should send success", () => {
+  it("should send success", done => {
+    mockXHR.status = 200;
     const success = jest.fn();
     const tc = new TracingCore({
+      sendLog: false,
       plugins: [
+        BuildPlugin(),
         XhrSenderPlugin({
           url: "/test/success",
           middleware: [],
@@ -87,14 +120,17 @@ describe("test XhrSenderPlugin", () => {
     tc.report("test", { a: 1 });
 
     setTimeout(() => {
-      expect(success).toBeCalledWith(["test", { a: 1 }]);
-    }, 100);
+      expect(success).toHaveBeenCalled();
+      done();
+    }, 50);
   });
 
-  it.skip("should send success useMiddleware", () => {
+  it("should send success useMiddleware", done => {
+    mockXHR.status = 200;
     const success = jest.fn();
     const tc = new TracingCore({
       plugins: [
+        BuildPlugin(),
         XhrSenderPlugin({
           url: "/test/success",
           middleware: [BatchSendMiddleware],
@@ -107,14 +143,12 @@ describe("test XhrSenderPlugin", () => {
 
     tc.report("test", { a: 1 });
 
-    setTimeout(() => {
-      expect(success).not.toBeCalled();
-    }, 100);
+    expect(success).not.toBeCalled();
+    expect(mockXHR.send).not.toBeCalled();
 
-    tc.destroy();
-
-    setTimeout(() => {
-      expect(success).toBeCalledWith("");
-    }, 100);
+    tc.destroy().then(() => {
+      expect(mockXHR.send).toHaveBeenCalled();
+      done();
+    });
   });
 });

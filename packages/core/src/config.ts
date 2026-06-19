@@ -6,7 +6,8 @@ export interface TracingCoreConfig {
 }
 
 export const initConfig: TracingCoreConfig = {
-  sendLog: __DEV__,
+  // fix: test not sendLog
+  sendLog: __DEV__ && !__TEST__,
   plugins: []
 };
 

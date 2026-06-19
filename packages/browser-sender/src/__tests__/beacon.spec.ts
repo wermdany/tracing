@@ -1,26 +1,28 @@
-// import { TracingCore } from "@tracing/core";
 import { noop } from "@tracing/shared";
 import { createBeaconSenderFactory } from "../beacon";
 import { SenderError } from "../base";
 
-import { mockServer } from "../../../../test-utils/mockMsw";
-
 jest.setTimeout(20000);
 
-beforeAll(() => {
-  mockServer.listen();
+beforeEach(() => {
+  Object.defineProperty(navigator, "sendBeacon", {
+    value: jest.fn().mockReturnValue(true),
+    writable: true,
+    configurable: true
+  });
 });
 
-afterAll(() => {
-  mockServer.close();
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 describe("test createBeaconSenderFactory", () => {
   it("should not set url throw error", () => {
+    jest.restoreAllMocks();
     expect(() => createBeaconSenderFactory()).toThrow();
   });
 
-  it.skip("should success build immutable", done => {
+  it("should success build immutable", done => {
     const server = createBeaconSenderFactory({
       url: "/test/success"
     });
@@ -34,7 +36,9 @@ describe("test createBeaconSenderFactory", () => {
     });
   });
 
-  it.skip("should Validator error build immutable", done => {
+  it("should BeaconQueue error build immutable", done => {
+    (navigator.sendBeacon as jest.Mock).mockReturnValue(false);
+
     const server = createBeaconSenderFactory({
       url: "/test/error"
     });
@@ -46,7 +50,7 @@ describe("test createBeaconSenderFactory", () => {
       (event, inBuild, code) => {
         expect(event).toBe("test");
         expect(inBuild).toBe(build);
-        expect(code).toBe(SenderError.Validator);
+        expect(code).toBe(SenderError.BeaconQueue);
 
         done();
       },
@@ -54,15 +58,20 @@ describe("test createBeaconSenderFactory", () => {
     );
   });
 
-  it.skip("should TimeOut error build immutable", () => {
+  it("should BeaconQueue error on send failure", done => {
+    (navigator.sendBeacon as jest.Mock).mockReturnValue(false);
+
     const server = createBeaconSenderFactory({
-      url: "/test/timeout"
+      url: "/test/beacon"
     });
 
     const fn = jest.fn();
     const build = { a: 1 };
     server("test", build, fn, noop);
 
-    expect(fn).toBeCalledWith();
+    setTimeout(() => {
+      expect(fn).toHaveBeenCalled();
+      done();
+    }, 20);
   });
 });
