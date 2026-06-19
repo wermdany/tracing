@@ -29,16 +29,37 @@ describe("test cookie options", () => {
 
   afterEach(() => {
     jest.useRealTimers();
+    jest.restoreAllMocks();
   });
 
-  // jsdom cookie expires = number not run
-  it.skip("test cookie options expires Number", () => {
+  it("test cookie options expires Number", () => {
+    let store: { value: string; maxAge: number; setAt: number } | null = null;
+
+    Object.defineProperty(document, "cookie", {
+      get() {
+        if (!store) return "";
+        const elapsed = (Date.now() - store.setAt) / 1000;
+        if (store.maxAge > 0 && elapsed >= store.maxAge) return "";
+        return `test=${store.value}`;
+      },
+      set(value: string) {
+        const m = value.match(/^test=([^;]+)(?:;\s*max-age=(\d+))?/);
+        if (m) {
+          store = { value: m[1], maxAge: m[2] ? Number(m[2]) : 0, setAt: Date.now() };
+        }
+      },
+      configurable: true
+    });
+
     const cookie = createCookie("test", { expires: 1 });
     expect(cookie.set({ a: 1 })).toBe(true);
+    expect(cookie.get()).toEqual({ a: 1 });
 
     jest.advanceTimersByTime(2000 * 1000);
 
     expect(cookie.get()).toBe(null);
+
+    delete (document as any).cookie;
   });
 
   it("test cookie options Date", () => {

@@ -3,7 +3,7 @@ import { createLogger } from "../logger";
 
 const bFun = () => 2;
 
-const logger = createLogger("core");
+const logger = createLogger("core", true);
 
 describe("test store", () => {
   const store = createStore("test", { a: 1 }, logger);

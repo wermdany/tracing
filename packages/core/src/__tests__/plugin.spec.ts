@@ -5,7 +5,7 @@ import { noop } from "@tracing/shared";
 import { mergeConfig, PluginDriver } from "../plugin";
 import { createLogger } from "../logger";
 
-const logger = createLogger("core");
+const logger = createLogger("core", true);
 
 const ctx = {} as TracingCore;
 
@@ -129,7 +129,7 @@ describe("test PluginDriver core", () => {
           }
         }
       ],
-      {},
+      { sendLog: true },
       logger
     );
 
