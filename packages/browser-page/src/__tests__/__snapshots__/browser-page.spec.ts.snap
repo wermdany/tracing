@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`browser-page-plugin should browser-page output modules 1`] = `
+{
+  "BrowserPageEnterEvent": "page-enter",
+  "BrowserPageExitEvent": "page-exit",
+  "BrowserPagePlugin": [Function],
+  "defaultGenPageEnterRecord": [Function],
+  "defaultGenPageExitRecord": [Function],
+}
+`;

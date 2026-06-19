@@ -29,15 +29,13 @@ export const createFetchSenderFactory: BaseSenderFactory<FetchSenderConfig> = co
     throw new Error("You must set send url");
   }
 
-  const timeout2Error = (timeout: number) =>
-    new Promise<SenderError.TimeOut>((_, reject) => {
-      setTimeout(() => {
-        reject(SenderError.TimeOut);
-      }, timeout);
-    });
+  const adapter = (url: string, options: RequestInit, timeout: number) => {
+    if (timeout <= 0) return fetch(url, options);
 
-  const adapter = (url: string, options: RequestInit) => {
-    return fetch(url, options);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+
+    return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
   };
 
   return (event, build, error, success) => {
@@ -46,13 +44,11 @@ export const createFetchSenderFactory: BaseSenderFactory<FetchSenderConfig> = co
       return;
     }
 
-    const race = [adapter(resolveConfig.url, { ...resolveConfig, ...{ body: JSON.stringify(build) } })];
-
-    if (resolveConfig.timeout > 0) {
-      race.push(timeout2Error(resolveConfig.timeout) as unknown as Promise<Response>);
-    }
-
-    Promise.race(race)
+    adapter(
+      resolveConfig.url,
+      { ...resolveConfig, ...{ body: JSON.stringify(build) } },
+      resolveConfig.timeout
+    )
       .then(body => {
         if (resolveConfig.validateStatus(body.status)) {
           success(event, build);
@@ -61,7 +57,7 @@ export const createFetchSenderFactory: BaseSenderFactory<FetchSenderConfig> = co
         }
       })
       .catch(err => {
-        if (err === SenderError.TimeOut) {
+        if (err instanceof DOMException && err.name === "AbortError") {
           error(event, build, SenderError.TimeOut);
         } else {
           error(event, build, SenderError.Network);
@@ -93,7 +89,7 @@ export function FetchSenderPlugin(config?: Partial<FetchSenderPluginConfig>): Tr
     send: {
       order: resolveConfig.order,
       handler(event, build) {
-        if (!excludes(event)) return;
+        if (excludes(event)) return;
 
         instance(event, build, resolveConfig.error, resolveConfig.success);
         return false;

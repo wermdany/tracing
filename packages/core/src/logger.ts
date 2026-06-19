@@ -1,7 +1,3 @@
-export interface LoggerConfig {
-  isLogger: boolean;
-}
-
 export interface Logger {
   warn: (...args: any[]) => void;
   info: (...args: any[]) => void;
@@ -9,9 +5,7 @@ export interface Logger {
   throwError: (base: Error | string) => never;
 }
 
-export function createLogger<N extends string>(name: N, options?: Partial<LoggerConfig>): Logger {
-  const { isLogger = true } = options || {};
-
+export function createLogger<N extends string>(name: N, isLogger?: boolean): Logger {
   const genPrefix = () => {
     return name ? "[".concat(__NAME__, "/", name, "]") : "[".concat(__NAME__, "]");
   };

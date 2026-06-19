@@ -60,10 +60,10 @@ collect.init(); // tracing 已启动
 
 ```typescript
 export interface FunctionPlugins {
-  // 启动时
-  setup: (this: PluginContext, initConfig: TracingCoreConfig) => void;
-  // 初始化完成
+  // 初始化操作
   init: (this: PluginContext, ctx: TracingCore) => void;
+  // 初始化完成，开始进行副作用操作
+  setup: (this: PluginContext, initConfig: TracingCoreConfig) => AnyFun | void ;
   // 组装合并需要发送的数据
   build: (this: PluginContext, event: string, record: Record<string, any>) => Record<string, any>;
   // 发送数据前，主要用于阻止发送
@@ -139,7 +139,7 @@ Hooks 有很多执行方式，最常见的就是单纯的调用，像 Vue 的生
 
 如果按照执行方式可分为：
 
-1. 顺序执行 Hook 如 setup 、init、destroy，这些会按照 Hook 顺序，一个一个执行
+1. 顺序执行 Hook 如 init、setup 、destroy，这些会按照 Hook 顺序，一个一个执行
 2. 熔断执行 Hook 如 beforeSend、 send ，这些在遇到第一个返回 false 的就不会再执行后边的
 3. 同步执行 Hook 如 beforeDestroy ，这个会同时执行，只有全部返回才会执行下一个 Hook
 4. 顺序合并 Hook 如 build ，这个会把每一个 Hook 的返回值，合并到一起

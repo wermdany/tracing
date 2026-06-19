@@ -1,6 +1,5 @@
 import type { FunctionPlugins, TracingPlugin } from "../plugin";
 import type { TracingCore } from "../core";
-import type { TracingCoreConfig } from "../config";
 
 import { noop } from "@tracing/shared";
 import { mergeConfig, PluginDriver } from "../plugin";
@@ -9,8 +8,6 @@ import { createLogger } from "../logger";
 const logger = createLogger("core");
 
 const ctx = {} as TracingCore;
-
-const coreConfig = {} as TracingCoreConfig;
 
 describe("test PluginDriver utils", () => {
   it("test mergeConfig", () => {
@@ -136,7 +133,7 @@ describe("test PluginDriver core", () => {
       logger
     );
 
-    expect(pd.hookSequentialSync("setup", [coreConfig])).toHaveConsoleInfo("testPlugin", __VERSION__);
+    expect(pd.hookSequentialSync("setup", [ctx])).toHaveConsoleInfo("testPlugin", __VERSION__);
   });
 
   it("hookParallel Api", () => {
@@ -166,7 +163,7 @@ describe("test PluginDriver core", () => {
       })
     );
     const pd = PluginDriver(plugins, {}, logger);
-    pd.hookSequentialSync("setup", [coreConfig]);
+    pd.hookSequentialSync("setup", [ctx]);
 
     expect(flat).toEqual(resolve);
   });
@@ -182,7 +179,7 @@ describe("test PluginDriver core", () => {
       })
     );
     const pd = PluginDriver(plugins, {}, logger);
-    const effects = pd.hookSequentialSync("setup", [coreConfig]);
+    const effects = pd.hookSequentialSync("setup", [ctx]);
 
     expect(effects.map(effect => effect())).toEqual(resolve);
   });

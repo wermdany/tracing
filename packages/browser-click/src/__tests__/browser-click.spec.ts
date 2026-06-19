@@ -33,8 +33,7 @@ describe("browser-click-plugin", () => {
         BrowserClickPlugin({
           document: all.wrapper
         })
-      ],
-      isLogger: false
+      ]
     });
 
     jest.spyOn(tc, "report");
@@ -72,6 +71,48 @@ describe("browser-click-plugin", () => {
   it("should removeEventListener to wrapper", async () => {
     await tc.destroy();
     expect(all.wrapper.removeEventListener).toBeCalledTimes(1);
+  });
+
+  it("should not duplicate listener on multiple init", () => {
+    tc.init();
+    expect(all.wrapper.addEventListener).toBeCalledTimes(1);
+  });
+
+  it("should not crash on disconnected element (parentElement null)", () => {
+    const orphan = document.createElement("button");
+    orphan.click();
+    expect(tc.report).not.toBeCalled();
+  });
+
+  it("should not crash on null event target", () => {
+    const event = new MouseEvent("click", { bubbles: true });
+    Object.defineProperty(event, "target", { value: null });
+    all.wrapper.dispatchEvent(event);
+    expect(tc.report).not.toBeCalled();
+  });
+
+  it("should not break click on genRecord throw", () => {
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation(jest.fn());
+
+    const tc2 = new TracingCore({
+      plugins: [
+        BrowserClickPlugin({
+          document: all.wrapper,
+          genRecord: () => {
+            throw new Error("genRecord error");
+          }
+        })
+      ]
+    });
+
+    jest.spyOn(tc2, "report");
+    tc2.init();
+
+    expect(() => all.button.click()).not.toThrow();
+    expect(tc2.report).not.toBeCalled();
+
+    consoleSpy.mockRestore();
+    tc2.destroy();
   });
 
   it("should browser-click output modules", () => {

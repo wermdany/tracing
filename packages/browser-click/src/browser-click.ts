@@ -19,7 +19,7 @@ export interface BrowserClickPluginConfig {
 
 export function BrowserClickPlugin(inputConfig?: Partial<BrowserClickPluginConfig>): TracingPlugin {
   const config: BrowserClickPluginConfig = {
-    document: document.body,
+    document: (typeof document !== "undefined" ? document.body : undefined) as HTMLElement,
     watchElement: ["button", "a", "input", "textarea"],
     watchAttrs: ["auto-watch-browser-click"],
     watchLevel: 1,
@@ -28,6 +28,7 @@ export function BrowserClickPlugin(inputConfig?: Partial<BrowserClickPluginConfi
   };
 
   let core: TracingCore;
+  let isWatching = false;
 
   const elementIsWatch = (element: HTMLElement, level: number): HTMLElement | undefined => {
     const tagName = getElementTagName(element) as keyof HTMLElementTagNameMap;
@@ -37,15 +38,15 @@ export function BrowserClickPlugin(inputConfig?: Partial<BrowserClickPluginConfi
     if (config.watchElement.includes(tagName) || config.watchAttrs.some(attr => attrs.includes(attr))) {
       return element;
     }
-    if (level > 0) {
-      return elementIsWatch(element.parentElement!, --level);
+    if (level > 0 && element.parentElement) {
+      return elementIsWatch(element.parentElement, --level);
     }
   };
 
   const watch = (logger: Logger) => {
     const dom = config.document;
 
-    if (!dom || !isElement(dom)) {
+    if (!dom) {
       __DEV__ && logger.error(`watch document is not Element`);
       return;
     }
@@ -53,18 +54,27 @@ export function BrowserClickPlugin(inputConfig?: Partial<BrowserClickPluginConfi
     dom.addEventListener("click", watchFun);
   };
 
-  const watchFun = (event: MouseEvent) => {
-    const element = event.target as HTMLElement;
+  const watchFun = (event: Event) => {
+    const target = event.target;
 
+    if (!target || !isElement(target)) {
+      return;
+    }
+
+    const element = target as HTMLElement;
     const watchEl = elementIsWatch(element, config.watchLevel);
 
     if (!watchEl) {
       return;
     }
 
-    const record = config.genRecord(watchEl);
+    try {
+      const record = config.genRecord(watchEl);
 
-    core.report(BrowserClickEvent, record);
+      core.report(BrowserClickEvent, record);
+    } catch (error) {
+      __DEV__ && console.error("[tracing:browser-click] genRecord error:", error);
+    }
   };
 
   const unWatch = () => {
@@ -75,10 +85,16 @@ export function BrowserClickPlugin(inputConfig?: Partial<BrowserClickPluginConfi
     name: "tracing:browser-click",
     init(ctx) {
       core = ctx;
-      watch(this.logger);
+      if (!isWatching) {
+        watch(this.logger);
+        isWatching = true;
+      }
     },
     destroy() {
-      unWatch();
+      if (isWatching) {
+        unWatch();
+        isWatching = false;
+      }
     }
   };
 }
@@ -93,7 +109,7 @@ export function defaultGenRecord(target: HTMLElement) {
     elementPath: getElementPath(target)
   };
 
-  if (tagName == "a") {
+  if (tagName === "a") {
     return { href: (target as HTMLAnchorElement).href, ...globalRecord };
   }
   return globalRecord;

@@ -79,8 +79,7 @@ describe("test XhrSenderPlugin", () => {
           middleware: [],
           success
         })
-      ],
-      isLogger: false
+      ]
     });
 
     tc.init();
@@ -101,8 +100,7 @@ describe("test XhrSenderPlugin", () => {
           middleware: [BatchSendMiddleware],
           success
         })
-      ],
-      isLogger: false
+      ]
     });
 
     tc.init();

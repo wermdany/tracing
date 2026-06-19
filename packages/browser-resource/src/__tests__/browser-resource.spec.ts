@@ -71,8 +71,7 @@ describe("test BrowserResourcePlugin", () => {
     performance.getEntriesByType = MockGetEntriesByType(10);
 
     tc = new TracingCore({
-      plugins: [BrowserResourcePlugin()],
-      isLogger: false
+      plugins: [BrowserResourcePlugin()]
     });
 
     jest.spyOn(tc, "report");

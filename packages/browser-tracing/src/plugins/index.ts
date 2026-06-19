@@ -7,8 +7,20 @@ import { SenderPlugin } from "./SenderPlugin";
 import type { BrowserClickPluginConfig } from "@tracing/browser-click";
 import { BrowserClickPlugin } from "@tracing/browser-click";
 
+import type { ResourceConfig } from "@tracing/browser-resource";
+import { BrowserResourcePlugin } from "@tracing/browser-resource";
+
+import type { BrowserPageConfig } from "@tracing/browser-page";
+import { BrowserPagePlugin } from "@tracing/browser-page";
+
+import type { BrowserScrollPluginConfig } from "@tracing/browser-scroll";
+import { BrowserScrollPlugin } from "@tracing/browser-scroll";
+
 export interface NormalPluginConfig extends BuildPluginConfig, SenderPluginConfig {
   webClick: Partial<BrowserClickPluginConfig> | false;
+  resource: Partial<ResourceConfig> | false;
+  page: Partial<BrowserPageConfig> | false;
+  scroll: Partial<BrowserScrollPluginConfig> | false;
 }
 
 export function createNormalPlugin(config: Partial<NormalPluginConfig>) {
@@ -16,6 +28,18 @@ export function createNormalPlugin(config: Partial<NormalPluginConfig>) {
 
   if (config.webClick !== false) {
     plugins.push(BrowserClickPlugin(config.webClick));
+  }
+
+  if (config.resource !== false) {
+    plugins.push(BrowserResourcePlugin(config.resource));
+  }
+
+  if (config.page !== false) {
+    plugins.push(BrowserPagePlugin(config.page));
+  }
+
+  if (config.scroll !== false) {
+    plugins.push(BrowserScrollPlugin(config.scroll));
   }
 
   return plugins;

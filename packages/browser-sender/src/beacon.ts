@@ -55,7 +55,7 @@ export function BeaconSenderPlugin(config?: Partial<BeaconSenderPluginConfig>): 
     send: {
       order: resolveConfig.order,
       handler(event, build) {
-        if (!excludes(event)) return;
+        if (excludes(event)) return;
 
         instance(event, build, resolveConfig.error, resolveConfig.success);
         return false;

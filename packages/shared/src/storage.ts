@@ -73,21 +73,18 @@ export function createCookie<T>(name: string, options: Partial<CookieOptions> = 
 
   return {
     get(): T | null {
-      const value = decodeURIComponent(
-        document.cookie.replace(
-          new RegExp(
-            "(?:(?:^|.*;)\\s*" +
-              encodeURIComponent(name).replace(/[-.+*]/g, "\\$&") +
-              "\\s*\\=\\s*([^;]*).*$)|^.*$"
-          ),
-          "$1"
-        )
+      const match = document.cookie.match(
+        new RegExp("(?:^|;)\\s*" + encodeURIComponent(name).replace(/[-.+*]/g, "\\$&") + "\\s*=\\s*([^;]*)")
       );
+
+      if (!match) return null;
+
+      const value = decodeURIComponent(match[1]);
 
       try {
         return JSON.parse(value);
       } catch (error) {
-        return null;
+        return value as unknown as T;
       }
     },
     set(value: T): boolean {
