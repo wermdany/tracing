@@ -141,7 +141,7 @@ export function createRollupConfigs(target: string, config: RollupConfig): Rollu
               declarationMap: buildType
             }
           },
-          exclude: ["**/__tests__"]
+          exclude: ["**/__tests__", "test-utils/*"]
         }),
         replace({
           values: {

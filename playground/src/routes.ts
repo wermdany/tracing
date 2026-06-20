@@ -49,5 +49,10 @@ export const routes: RouteItem[] = [
     key: "/browser-http-axios",
     label: "Axios 监控（browser-http-axios）",
     element: lazy(() => import("./pages/browser-http-axios"))
+  },
+  {
+    key: "/browser-error",
+    label: "错误监控（browser-error）",
+    element: lazy(() => import("./pages/browser-error"))
   }
 ];
