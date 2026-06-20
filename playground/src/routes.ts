@@ -54,5 +54,10 @@ export const routes: RouteItem[] = [
     key: "/browser-error",
     label: "错误监控（browser-error）",
     element: lazy(() => import("./pages/browser-error"))
+  },
+  {
+    key: "/browser-performance",
+    label: "性能指标（browser-performance）",
+    element: lazy(() => import("./pages/browser-performance"))
   }
 ];

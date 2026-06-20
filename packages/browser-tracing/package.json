@@ -47,6 +47,7 @@
     "@tracing/browser-sender": "workspace:*",
     "@tracing/browser-page": "workspace:*",
     "@tracing/browser-scroll": "workspace:*",
-    "@tracing/browser-http-axios": "workspace:*"
+    "@tracing/browser-http-axios": "workspace:*",
+    "@tracing/browser-performance": "workspace:*"
   }
 }

@@ -1,0 +1,54 @@
+{
+  "name": "@tracing/browser-performance",
+  "version": "0.0.4",
+  "private": false,
+  "lib": true,
+  "description": "Web performance monitoring plugin (Web Vitals, Navigation Timing, Long Tasks, Memory) for tracing SDK",
+  "main": "index.js",
+  "module": "dist/browser-performance.esm-bundler.js",
+  "types": "dist/browser-performance.d.ts",
+  "sideEffects": false,
+  "author": "wermdany <https://github.com/wermdany>",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "buildOptions": {
+    "name": "TracingBrowserPerformance",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "cjs",
+      "global"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wermdany/tracing.git",
+    "directory": "packages/browser-performance"
+  },
+  "bugs": {
+    "url": "https://github.com/wermdany/tracing/issues"
+  },
+  "homepage": "https://github.com/wermdany/tracing/tree/master/packages/browser-performance#readme",
+  "keywords": [
+    "tracker",
+    "report",
+    "collect",
+    "FE",
+    "web",
+    "browser",
+    "performance",
+    "web-vitals",
+    "lcp",
+    "fid",
+    "cls",
+    "fcp",
+    "ttfb"
+  ],
+  "dependencies": {
+    "@tracing/core": "workspace:*",
+    "@tracing/shared": "workspace:*"
+  }
+}

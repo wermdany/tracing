@@ -53,7 +53,7 @@ const BrowserHttpAxios: FC = () => {
         BuildPlugin(),
         BrowserHttpAxiosPlugin({
           axiosInstance: httpSuccess,
-          shouldRecord: (config) => {
+          shouldRecord: config => {
             const url = typeof config.url === "string" ? config.url : "";
             return !url.includes("/error") && !url.includes("/timeout");
           }
@@ -90,7 +90,7 @@ const BrowserHttpAxios: FC = () => {
         BuildPlugin(),
         BrowserHttpAxiosPlugin({
           axiosInstance: httpFiltered,
-          shouldRecord: (config) => {
+          shouldRecord: config => {
             const url = typeof config.url === "string" ? config.url : "";
             return url.includes("/success");
           }
@@ -155,7 +155,10 @@ const BrowserHttpAxios: FC = () => {
           <Card size="small" title="实时数据">
             <Row gutter={[8, 8]}>
               <Col span={8}>
-                <Statistic title="最近 URL" value={latest.body?.url ? latest.body.url.substring(0, 20) : "-"} />
+                <Statistic
+                  title="最近 URL"
+                  value={latest.body?.url ? latest.body.url.substring(0, 20) : "-"}
+                />
               </Col>
               <Col span={8}>
                 <Statistic title="最近方法" value={latest.body?.method || "-"} />
@@ -172,7 +175,9 @@ const BrowserHttpAxios: FC = () => {
                   value={
                     latest.body?.errorType
                       ? latest.body?.errorType
-                      : (latest.body?.status >= 400 ? `HTTP ${latest.body.status}` : "无")
+                      : latest.body?.status >= 400
+                      ? `HTTP ${latest.body.status}`
+                      : "无"
                   }
                 />
               </Col>
@@ -214,8 +219,7 @@ const BrowserHttpAxios: FC = () => {
                   >
                     #{logs.length - i}
                   </Tag>
-                  [{log.time}] {log.build?.body?.method || "?"}{" "}
-                  {log.build?.body?.status || "?"} —{" "}
+                  [{log.time}] {log.build?.body?.method || "?"} {log.build?.body?.status || "?"} —{" "}
                   {log.build?.body?.url
                     ? log.build.body.url.substring(log.build.body.url.lastIndexOf("/") + 1)
                     : "?"}
@@ -236,12 +240,8 @@ const BrowserHttpAxios: FC = () => {
               <Button type="primary" onClick={() => send(httpAll, "/success", "post", { key: "value" })}>
                 POST 成功
               </Button>
-              <Button onClick={() => send(httpAll, "/success", "put", { key: "value" })}>
-                PUT 成功
-              </Button>
-              <Button onClick={() => send(httpAll, "/success", "delete")}>
-                DELETE 成功
-              </Button>
+              <Button onClick={() => send(httpAll, "/success", "put", { key: "value" })}>PUT 成功</Button>
+              <Button onClick={() => send(httpAll, "/success", "delete")}>DELETE 成功</Button>
             </Space>
           </Card>
 
@@ -336,9 +336,7 @@ const BrowserHttpAxios: FC = () => {
               </Button>
               <Button
                 onClick={async () => {
-                  await Promise.all(
-                    Array.from({ length: 10 }, (_, i) => send(httpAll, "/success"))
-                  );
+                  await Promise.all(Array.from({ length: 10 }, (_, i) => send(httpAll, "/success")));
                 }}
               >
                 10 个并发成功

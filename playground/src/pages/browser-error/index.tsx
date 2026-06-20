@@ -160,7 +160,7 @@ const BrowserError: FC = () => {
                 danger
                 onClick={() => {
                   setTimeout(() => {
-                    (({}) as any).foo.bar();
+                    (({} as any).foo.bar());
                   }, 0);
                 }}
               >

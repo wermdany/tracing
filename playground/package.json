@@ -15,6 +15,7 @@
     "@tracing/browser-resource": "workspace:*",
     "@tracing/browser-http-axios": "workspace:*",
     "@tracing/browser-scroll": "workspace:*",
+    "@tracing/browser-performance": "workspace:*",
     "@tracing/browser-sender": "workspace:*",
     "@tracing/core": "workspace:*",
     "antd": "^5.15.3",

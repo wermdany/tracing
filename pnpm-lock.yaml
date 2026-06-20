@@ -181,6 +181,15 @@ importers:
         specifier: workspace:*
         version: link:../shared
 
+  packages/browser-performance:
+    dependencies:
+      '@tracing/core':
+        specifier: workspace:*
+        version: link:../core
+      '@tracing/shared':
+        specifier: workspace:*
+        version: link:../shared
+
   packages/browser-resource:
     dependencies:
       '@tracing/core':
@@ -219,6 +228,9 @@ importers:
       '@tracing/browser-page':
         specifier: workspace:*
         version: link:../browser-page
+      '@tracing/browser-performance':
+        specifier: workspace:*
+        version: link:../browser-performance
       '@tracing/browser-resource':
         specifier: workspace:*
         version: link:../browser-resource
@@ -254,6 +266,9 @@ importers:
       '@tracing/browser-page':
         specifier: workspace:*
         version: link:../packages/browser-page
+      '@tracing/browser-performance':
+        specifier: workspace:*
+        version: link:../packages/browser-performance
       '@tracing/browser-resource':
         specifier: workspace:*
         version: link:../packages/browser-resource
