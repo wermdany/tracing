@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`browser-performance -> output modules should output modules 1`] = `
+{
+  "BrowserPerformancePlugin": [Function],
+  "PerformanceCLSEvent": "performance-cls",
+  "PerformanceFIDEvent": "performance-fid",
+  "PerformanceLongTaskEvent": "performance-longtask",
+  "PerformanceMemoryEvent": "performance-memory",
+  "PerformancePageloadEvent": "performance-pageload",
+  "observeCLS": [Function],
+  "observeFCP": [Function],
+  "observeFID": [Function],
+  "observeLCP": [Function],
+  "observeLongTasks": [Function],
+  "observeMemory": [Function],
+  "observeNavigationTiming": [Function],
+  "observeTTFB": [Function],
+}
+`;

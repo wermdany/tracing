@@ -40,7 +40,7 @@ async function run() {
 }
 
 async function buildAll(targets: string[]) {
-  await runParallel(require("os").cpus().length, targets, build);
+  await runParallel(Math.min(require("os").cpus().length, 4), targets, build);
 }
 
 async function runParallel(maxConcurrency: number, source: string[], iteratorFn: (...arg: any) => any) {
