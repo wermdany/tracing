@@ -21,6 +21,81 @@ export function getTimezoneOffset() {
 }
 
 /**
+ * 获取用户代理字符串
+ */
+export function getUserAgent() {
+  return navigator.userAgent || "";
+}
+
+/**
+ * 获取操作系统名称
+ */
+export function getOsName() {
+  const ua = navigator.userAgent || "";
+  if (ua.indexOf("Windows") !== -1) return "Windows";
+  if (ua.indexOf("Mac OS X") !== -1) return "macOS";
+  if (ua.indexOf("Linux") !== -1) return "Linux";
+  if (ua.indexOf("Android") !== -1) return "Android";
+  if (ua.indexOf("iOS") !== -1 || ua.indexOf("iPhone") !== -1 || ua.indexOf("iPad") !== -1) return "iOS";
+  if (ua.indexOf("CrOS") !== -1) return "ChromeOS";
+  return "Unknown";
+}
+
+/**
+ * 获取浏览器名称和版本
+ */
+export function getBrowserInfo() {
+  const ua = navigator.userAgent || "";
+  let name = "Unknown";
+  let version = "";
+
+  // Edge 必须单独优先检测（新版 Edge 的 UA 中 Edg/ 出现在 Chrome/ 之后）
+  const edgeMatch = ua.match(/(Edge|Edg)\/([\d.]+)/);
+  if (edgeMatch) {
+    name = "Edge";
+    version = edgeMatch[2];
+  } else {
+    const match = ua.match(/(Chrome|Firefox|Safari|Opera)\/([\d.]+)/);
+    if (match) {
+      name = match[1];
+      version = match[2];
+    } else if (ua.indexOf("MSIE") !== -1 || ua.indexOf("Trident") !== -1) {
+      name = "IE";
+      const v = ua.match(/(?:MSIE |rv:)([\d.]+)/);
+      version = v ? v[1] : "";
+    }
+  }
+
+  return name + (version ? ` ${version}` : "");
+}
+
+/**
+ * 获取网络类型（effectiveType）
+ */
+export function getNetworkType() {
+  const conn = (navigator as any).connection;
+  if (conn && conn.effectiveType) {
+    return conn.effectiveType as string;
+  }
+  return "";
+}
+
+/**
+ * 获取设备内存（GB）
+ */
+export function getDeviceMemory() {
+  const mem = (navigator as any).deviceMemory;
+  return mem != null ? (mem as number) : 0;
+}
+
+/**
+ * 获取 CPU 逻辑核数
+ */
+export function getHardwareConcurrency() {
+  return navigator.hardwareConcurrency || 0;
+}
+
+/**
  * 获取显示屏幕分辨率宽度
  */
 export function getScreenWidth() {
