@@ -1,99 +1,81 @@
 # browser-tracing
 
-提供集成了 Tracing 全部能力，但是你还是可以通过配置来开关和配置具体功能
+一站式浏览器端监控集成 SDK，整合所有 `@tracing/*` 插件，开箱即用。支持点击追踪、页面访问、滚动行为、资源性能、HTTP 请求等全方位的监控能力。
 
-> 处于对打包体积的考虑，如果您只需要部分功能请参考 [定制功能](../../README.md#定制功能)
+> 如需按需加载以减少打包体积，请参考 [定制功能](../../README.md#定制功能) 单独使用各插件。
 
-## 使用
+## 安装
 
-```sh
-
-pnpm install browser-tracing
-
+```bash
+pnpm add browser-tracing
 ```
 
+## 快速开始
+
 ```ts
-import type { BrowserTracingConfig } from "browser-tracing";
 import { createBrowserTracing } from "browser-tracing";
 
-const config: BrowserTracingConfig = {
-  url: "/apis/success",
-  xhrResponseType: "json",
-  xhrTimeout: 1000
-};
-
-export const tracing = createBrowserTracing(config);
+const tracing = createBrowserTracing({
+  url: "/collect"
+});
 ```
 
-如果需要配置插件
+### 配置插件
 
 ```ts
-import type { BrowserTracingConfig } from "browser-tracing";
 import { createBrowserTracing } from "browser-tracing";
 
-const config: BrowserTracingConfig = {
-  url: "/apis/success",
-  xhrResponseType: "json",
-  xhrTimeout: 1000,
+const tracing = createBrowserTracing({
+  url: "/collect",
   webClick: {
     watchElement: ["a", "button"]
   }
-};
-
-export const tracing = createBrowserTracing(config);
+});
 ```
 
-关闭插件能力只需要设置 `webClick:false` 即可
-
-## 内部插件
-
-内部插件，提供了负责整个流程的必须能力，比如发送、组装发送格式
-
-### NormalBuildPlugin
-
-提供基本的组装发送数据格式能力
-
-#### 配置参数
+关闭某个插件只需设为 `false`：
 
 ```ts
-interface BuildFormatParams {
-  header: Record<string, any>;
-  build: Record<string, any>;
-  event: string;
-}
-
-export interface NormalBuildPluginConfig {
-  formatBuild: (params: BuildFormatParams) => Record<string, any>;
-  headers: Record<string, StoreProfile>;
-}
+createBrowserTracing({
+  url: "/collect",
+  webClick: false,    // 关闭点击追踪
+  scroll: false,      // 关闭滚动追踪
+  resource: false     // 关闭资源性能监控
+});
 ```
 
-##### formatBuild
+## 配置
 
-- Type: `BuildFormatParams` 选填
-- Default: `{ "event": "event", "header": {}, "body": {} }`
+### 全局配置
 
-格式化发送数据
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `url` | `string \| ((sender) => string)` | `""` | **必填**，上报地址；支持函数形式根据发送器类型返回不同地址 |
+| `sendLog` | `boolean \| ((event, build) => void)` | 开发环境开启 | 是否打印上报日志 |
+| `plugins` | `Array<TracingPlugin>` | `[]` | 额外自定义插件，追加在默认插件之后 |
 
-##### headers
+### 发送配置
 
-- Type: `Record<string, StoreProfile>` 选填
-- Default:
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `xhr` | `Partial<XhrSenderPluginConfig> \| false` | `{ order: "post" }` | XHR 发送配置，设为 `false` 关闭 |
+| `fetch` | `Partial<FetchSenderPluginConfig> \| false` | `false` | Fetch 发送配置，默认关闭 |
+| `beacon` | `Partial<BeaconSenderPluginConfig> \| false` | `{ order: "pre" }` | Beacon 发送配置 |
+| `middleware` | `MiddlewareApi[]` | `[]` | 发送中间件（错误重发、批量发送等） |
+| `error` | `ErrorCall` | `noop` | 发送失败回调 |
+| `success` | `SuccessCall` | `noop` | 发送成功回调 |
+
+### Build 插件配置
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `formatBuild` | `(params: { header, build, event }) => Record<string, any>` | 内置格式 | 自定义组装上报数据格式 |
+| `headers` | `Record<string, StoreProfile>` | 见下方 | 公共头部信息，延迟求值 |
+
+#### 默认公共头部
 
 ```ts
-import {
-  getPathName,
-  getReferrer,
-  getViewportHeight,
-  getScreenHeight,
-  getScreenWidth,
-  getTitle,
-  getUrl,
-  getTimezoneOffset,
-  getViewportWidth
-} from "@tracing/shared";
-
-const defaultHeaders = {
+{
   path: getPathName,
   referrer: getReferrer,
   viewportWidth: getViewportWidth,
@@ -103,7 +85,38 @@ const defaultHeaders = {
   title: getTitle,
   url: getUrl,
   timezoneOffset: getTimezoneOffset
-};
+}
 ```
 
-设置公共头部信息
+### 各插件独立配置
+
+通过以下字段可分别配置各插件，传入 `false` 关闭：
+
+| 字段 | 插件 | 配置类型 | 默认启用 |
+|------|------|----------|----------|
+| `webClick` | @tracing/browser-click | `Partial<BrowserClickPluginConfig>` | 是 |
+| `page` | @tracing/browser-page | `Partial<BrowserPageConfig>` | 是 |
+| `scroll` | @tracing/browser-scroll | `Partial<BrowserScrollPluginConfig>` | 是 |
+| `resource` | @tracing/browser-resource | `Partial<ResourceConfig>` | 是 |
+| `axios` | @tracing/browser-http-axios | `BrowserHttpAxiosPluginConfig` | 否（需要时开启） |
+
+## 内置插件
+
+### BuildPlugin
+
+组装发送数据格式，负责将 header、event、body 拼接为统一的上报结构。
+
+### SenderPlugin
+
+根据配置创建 XHR / Beacon / Fetch 发送器插件，支持中间件增强。
+
+## 事件一览
+
+| 事件 | 来源 | 说明 |
+|------|------|------|
+| `"browser-click"` | @tracing/browser-click | 点击事件 |
+| `"page-enter"` | @tracing/browser-page | 进入页面 |
+| `"page-exit"` | @tracing/browser-page | 离开页面 |
+| `"browser-scroll"` | @tracing/browser-scroll | 滚动行为 |
+| `"browser-resource"` | @tracing/browser-resource | 资源加载 |
+| `"http-request"` | @tracing/browser-http-axios | HTTP 请求 |

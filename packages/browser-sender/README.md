@@ -1,208 +1,154 @@
 # @tracing/browser-sender
 
-提供数据上报能力
+数据上报插件集合，提供 XHR、Beacon、Fetch 三种发送方式及中间件机制（错误重发、批量发送），用于 `@tracing/core`。
 
-目前提供 XMLHttpRequest、fetch、beacon 三种上报方式
+## 安装
 
-以下以使用 XMLHttpRequest 上报方式为例介绍，其余上报方式使用类似
-
-## 使用
-
-```sh
-pnpm install @tracing/core @tracing/browser-sender
+```bash
+pnpm add @tracing/core @tracing/browser-sender
 ```
+
+## 快速开始
 
 ```ts
 import { TracingCore } from "@tracing/core";
 import { XhrSenderPlugin } from "@tracing/browser-sender";
 
-const collect = new TracingCore({
-  plugins: [XhrSenderPlugin()] // 已经使用 XMLHttpRequest 方式上报数据
+const tracing = new TracingCore({
+  plugins: [
+    XhrSenderPlugin({ url: "/collect" })
+  ]
 });
 
-collect.init();
+tracing.init();
 ```
 
-## 配置项
+## 发送方式
+
+### XMLHttpRequest
 
 ```ts
-export interface BaseSenderConfig {
-  url: string;
-  error: ErrorCall;
-  success: SuccessCall;
-}
+import { XhrSenderPlugin } from "@tracing/browser-sender";
 ```
 
-### url
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `url` | `string` | `""` | **必填**，上报地址 |
+| `timeout` | `number` | `2000` | 超时时间（ms），`0` 为永不超时 |
+| `withCredentials` | `boolean` | `false` | 是否携带跨域凭证 |
+| `headers` | `Record<string, string>` | `{ "Content-Type": "application/json;" }` | 请求头 |
+| `validateStatus` | `(status: number) => boolean` | `(s) => s === 200` | 判断请求是否成功 |
+| `responseType` | `XMLHttpRequestResponseType` | `"json"` | 响应数据类型 |
+| `error` | `ErrorCall` | `noop` | 发送失败的回调 |
+| `success` | `SuccessCall` | `noop` | 发送成功的回调 |
+| `order` | `"pre" \| "post"` | `"pre"` | 在 send 管道中的执行顺序 |
+| `excludes` | `Ignore` | `[]` | 不发送的事件列表，会交给下一个发送器 |
+| `middleware` | `MiddlewareApi[]` | `[]` | 发送中间件 |
 
-- Type: `string` 必填
-- Default: `""`
-
-上报数据地址
-
-### error
-
-- Type: `ErrorCall` 选填
-- Default: `noop`
-
-上报数据失败时执行的回调函数
-
-注意：如果你使用了错误重发中间件，重发接口的状态只会在内部处理
-
-### error
-
-- Type: `SuccessCall` 选填
-- Default: `noop`
-
-上报数据成功时执行的回调函数
-
-注意：如果你使用了错误重发中间件，重发接口的状态只会在内部处理
-
-XMLHttpRequest 独有配置
+### Beacon
 
 ```ts
-export interface XhrSenderConfig<T extends XhrResponseType = "json"> extends BaseSenderConfig {
-  timeout: number;
-  methods: "POST";
-  withCredentials: boolean;
-  headers: Record<string, string>;
-  validateStatus: (status: number) => boolean;
-  responseType: T;
-}
+import { BeaconSenderPlugin } from "@tracing/browser-sender";
 ```
 
-### timeout
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `url` | `string` | `""` | **必填**，上报地址 |
+| `order` | `"pre" \| "post"` | `"post"` | 在 send 管道中的执行顺序 |
+| `excludes` | `Ignore` | `[]` | 不发送的事件列表 |
+| `middleware` | `MiddlewareApi[]` | `[]` | 发送中间件 |
 
-- Type: `number` 选填
-- Default: `2000` ms
-
-上报超时时间， `0` 则永远不会超时
-
-### methods
-
-- Type: `"POST"` 选填
-- Default: `"POST"` ms
-
-上报请求方式
-
-### withCredentials
-
-- Type: `boolean` 选填
-- Default: `false`
-
-是否发送跨域请求凭证
-
-### headers
-
-- Type: `Record<string, string>` 选填
-- Default: `{ "Content-Type": "application/json;" }`
-
-设置请求头
-
-### validateStatus
-
-- Type: `(status: number) => boolean` 选填
-- Default: `(status) => status === 200`
-
-判断是否请求成功
-
-### responseType
-
-- Type: `"" | "arraybuffer" | "blob" | "document" | "json" | "text"` 选填
-- Default: `json`
-
-返回数据类型
-
-XMLHttpRequest 插件独有
+### Fetch
 
 ```ts
-export interface XhrSenderPluginConfig extends XhrSenderConfig, MiddlewareConfig {
-  order: handlerOrder;
-  excludes: Ignore;
-}
+import { FetchSenderPlugin } from "@tracing/browser-sender";
 ```
 
-### order
-
-- Type: `handlerOrder` 选填
-- Default: `post`
-
-这个插件要在什么顺序执行
-
-### excludes
-
-- Type: `Ignore` 选填
-- Default: `[]`
-
-这个插件不发送哪些事件，会交给下一个发送插件处理（如果有）
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `url` | `string` | `""` | **必填**，上报地址 |
+| `method` | `string` | `"POST"` | 请求方法 |
+| `headers` | `Record<string, any>` | `{ "Content-Type": "application/json;" }` | 请求头 |
+| `timeout` | `number` | `2000` | 超时时间（ms） |
+| `validateStatus` | `(status: number) => boolean` | `(s) => s === 200` | 判断请求是否成功 |
+| `order` | `"pre" \| "post"` | `"pre"` | 在 send 管道中的执行顺序 |
+| `excludes` | `Ignore` | `[]` | 不发送的事件列表 |
+| `middleware` | `MiddlewareApi[]` | `[]` | 发送中间件 |
 
 ## 发送中间件
 
-在上报数据的时候，可能有很多边界问题，最常见比如：批量发送、错误重发，要实现这个能力就需要使用中间件来实现
-
-在这里，发送中间件充分参考了 redux 中间件，经过处理后，返回一个强化版的 `BaseSenderHandle`
-
-### 拓展发送中间件
-
-发送中间件是一个类似于 redux compose 的组合
-
-```ts
-export type Middleware<Base extends BaseSenderHandle = BaseSenderHandle> = (
-  request: Base
-) => (...args: Parameters<Base>) => void;
-
-export type MiddlewareDestroy = (...args: any[]) => void | Promise<void>;
-
-export type MiddlewareApi<Config extends Record<string, any> = {}> = (config: Partial<Config>) => {
-  middleware: Middleware;
-  destroy: MiddlewareDestroy;
-};
-```
-
-如果你想要自定义一个发送中间件，可以参考上面接口，实现一个 `MiddlewareApi`
-
-其中 `destroy` 是清除中间件的副作用，在实际使用中，比如批量发送会在销毁前会把队列中未发送的数据全部发送
+中间件参考 Redux compose 模式，对 `BaseSenderHandle` 进行增强。
 
 ### 错误重发
 
-提供错误重发能力
-
 ```ts
-export interface ErrorRetryConfig {
-  retryCount: number;
-  retryInterval: number;
-  retryWeight: (count: number, interval: number) => number;
-  retryIgnoreEvent: Ignore;
-  retryIgnoreErrorCode: Ignore<SenderError>;
-}
+import { ErrorRetryMiddleware } from "@tracing/browser-sender";
+
+XhrSenderPlugin({
+  url: "/collect",
+  middleware: [
+    ErrorRetryMiddleware({
+      retryCount: 3,
+      retryInterval: 1000,
+      retryWeight: (count, interval) => count * interval,
+      retryIgnoreEvent: [],
+      retryIgnoreErrorCode: []
+    })
+  ]
+})
 ```
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `retryCount` | `number` | `3` | 最大重试次数 |
+| `retryInterval` | `number` | `1000` | 重试间隔基数（ms） |
+| `retryWeight` | `(count, interval) => number` | `count * interval` | 重试间隔计算函数 |
+| `retryIgnoreEvent` | `Ignore` | `[]` | 忽略重试的事件列表 |
+| `retryIgnoreErrorCode` | `Ignore<SenderError>` | `[]` | 忽略重试的错误码列表 |
 
 ### 批量发送
 
-提供批量发送能力
-
 ```ts
-export interface BatchSenderConfig {
-  batchCount: number;
-  batchIgnore: Ignore;
-}
+import { BatchSendMiddleware } from "@tracing/browser-sender";
+
+XhrSenderPlugin({
+  url: "/collect",
+  middleware: [
+    BatchSendMiddleware({
+      batchCount: 5,
+      batchIgnore: []
+    })
+  ]
+})
 ```
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `batchCount` | `number` | `5` | 积攒多少条后批量发送 |
+| `batchIgnore` | `Ignore` | `[]` | 忽略批量的事件列表 |
 
 ## 自定义发送方式
 
-如果目前内部提供的三种上报方式并不能满足你的需求，你也可以自定义一个发送方式
-
-你只需要实现 `BaseSenderFactory`
+实现 `BaseSenderFactory` 接口即可自定义发送方式：
 
 ```ts
-export type BaseSenderHandle = (
+import type { BaseSenderHandle, BaseSenderFactory } from "@tracing/browser-sender";
+
+type BaseSenderHandle = (
   event: string,
   build: Record<string, any>,
   error: ErrorCall,
   success: SuccessCall
 ) => void;
 
-export type BaseSenderFactory<T extends Record<string, any>> = (config?: Partial<T>) => BaseSenderHandle;
+type BaseSenderFactory<T extends Record<string, any>> = (config?: Partial<T>) => BaseSenderHandle;
 ```
 
-详细可以参考 [XhrSenderPlugin](src/xhr.ts#L110) 的实现方式
+详细参考 [XhrSenderPlugin](src/xhr.ts#L110) 实现。
+
+## 插件生命周期
+
+| 钩子 | 行为 |
+|------|------|
+| `send` | 根据 `order`（pre/post）注册到 send 管道，检查 excludes 后发送数据，返回 `false` 熔断 |
+| `beforeDestroy` | 异步执行中间件销毁（batch 清空队列、retry 清空定时器） |

@@ -1,92 +1,77 @@
 # @tracing/browser-click
 
-提供页面点击事件监听
+基于事件冒泡的页面点击监控插件，用于 `@tracing/core`。支持按标签名、属性和父级层级匹配目标元素，可自定义上报数据格式。
 
-## 使用
+## 安装
 
-```sh
-
-pnpm install @tracing/core @tracing/browser-click
-
+```bash
+pnpm add @tracing/core @tracing/browser-click
 ```
+
+## 快速开始
 
 ```ts
 import { TracingCore } from "@tracing/core";
 import { BrowserClickPlugin } from "@tracing/browser-click";
 
-const collect = new TracingCore({
-  plugins: [BrowserClickPlugin()] // 页面点击事件已应用
+const tracing = new TracingCore({
+  plugins: [BrowserClickPlugin()]
 });
 
-collect.init();
+tracing.init();
 ```
 
-## 配置项
+## 配置
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `document` | `HTMLElement` | `document.body` | 事件监听挂载元素。基于冒泡机制，注意阻止冒泡的场景 |
+| `watchElement` | `Array<keyof HTMLElementTagNameMap>` | `["button", "a", "input", "textarea"]` | 需要监听的元素标签名 |
+| `watchAttrs` | `string[]` | `["auto-watch-browser-click"]` | 元素携带这些属性时也会被收集 |
+| `watchLevel` | `number` | `1` | 向上查找 parentElement 的层级，用于 ant-design 等组件库内部嵌套场景 |
+| `genRecord` | `(target: HTMLElement) => Record<string, any>` | `defaultGenRecord` | 自定义上报数据格式 |
+
+### genRecord
+
+默认生成的数据格式：
 
 ```ts
-interface BrowserClickPluginConfig {
-  document: HTMLElement;
-  watchElement: Array<keyof HTMLElementTagNameMap>;
-  watchAttrs: string[];
-  watchLevel: number;
-  genRecord: (target: HTMLElement) => Record<string, any>;
+{
+  tagName: "BUTTON",
+  className: "btn-primary",
+  selector: "body > div > button.btn-primary",
+  innerText: "提交",
+  id: "submit-btn"
 }
 ```
 
-### document
+## 事件名称
 
-- Type: `HTMLElement` 选填
-- Default: `document.body`
+`"browser-click"`
 
-监听事件挂载元素
+可在接收端通过 `event === "browser-click"` 过滤出点击监控数据。
 
-由于监听是基于事件冒泡的，所以注意是否阻止了冒泡，导致没有监听到点击事件
+## 插件生命周期
 
-可以通过手动触发来解决
+| 钩子 | 行为 |
+|------|------|
+| `prepare` | 在 `document` 上注册 `click` 事件监听，匹配元素后调用 `core.report` |
+| `destroy` | 移除 `click` 事件监听，清理资源 |
+
+## 手动上报
 
 ```ts
 import { TracingCore } from "@tracing/core";
 import { BrowserClickPlugin, BrowserClickEvent, defaultGenRecord } from "@tracing/browser-click";
 
-const collect = new TracingCore({
+const tracing = new TracingCore({
   plugins: [BrowserClickPlugin()]
 });
 
-collect.init();
+tracing.init();
 
 const element = document.createElement("div");
-
 const record = defaultGenRecord(element);
 
-collect.report(BrowserClickEvent, record); // 自定义发送一个 browser-click report
+tracing.report(BrowserClickEvent, record);
 ```
-
-### watchElement
-
-- Type: `Array<keyof HTMLElementTagNameMap>` 选填
-- Default: `["button", "a", "input", "textarea"]`
-
-需要监听哪些元素
-
-### watchAttrs
-
-- Type: `string[]` 选填
-- Default: `["auto-watch-browser-click"]`
-
-当元素上有这个属性时也会进行收集
-
-### watchLevel
-
-- Type: `number` 选填
-- Default: `1`
-
-监听等级
-
-有时候你想监听的元素并不直接作用在当前点击触发元素上，所以这个字段允许查找 parentElement 几次，比较典型的 ant-design Button 内部有一个 span 标签，而且大多数会点击到 span 上
-
-### genRecord
-
-- Type: `(target: HTMLElement) => Record<string, any>` 选填
-- Default: `ReturnType<defaultGenRecord>`
-
-你自定决定自动收集那些数据

@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["esno", "execa", "preinstall", "wermdany"]
+  "cSpell.words": ["esno", "execa", "preinstall", "wermdany"],
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }

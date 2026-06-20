@@ -16,11 +16,15 @@ import { BrowserPagePlugin } from "@tracing/browser-page";
 import type { BrowserScrollPluginConfig } from "@tracing/browser-scroll";
 import { BrowserScrollPlugin } from "@tracing/browser-scroll";
 
+import type { BrowserHttpAxiosPluginConfig } from "@tracing/browser-http-axios";
+import { BrowserHttpAxiosPlugin } from "@tracing/browser-http-axios";
+
 export interface NormalPluginConfig extends BuildPluginConfig, SenderPluginConfig {
   webClick: Partial<BrowserClickPluginConfig> | false;
   resource: Partial<ResourceConfig> | false;
   page: Partial<BrowserPageConfig> | false;
   scroll: Partial<BrowserScrollPluginConfig> | false;
+  axios: BrowserHttpAxiosPluginConfig | false;
 }
 
 export function createNormalPlugin(config: Partial<NormalPluginConfig>) {
@@ -40,6 +44,10 @@ export function createNormalPlugin(config: Partial<NormalPluginConfig>) {
 
   if (config.scroll !== false) {
     plugins.push(BrowserScrollPlugin(config.scroll));
+  }
+
+  if (config.axios !== false && config.axios) {
+    plugins.push(BrowserHttpAxiosPlugin(config.axios));
   }
 
   return plugins;

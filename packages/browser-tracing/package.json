@@ -40,12 +40,13 @@
     "web"
   ],
   "dependencies": {
-    "@tracing/core": "0.0.4",
-    "@tracing/shared": "0.0.4",
-    "@tracing/browser-click": "0.0.4",
-    "@tracing/browser-resource": "0.0.4",
-    "@tracing/browser-sender": "0.0.4",
-    "@tracing/browser-page": "0.0.4",
-    "@tracing/browser-scroll": "0.0.4"
+    "@tracing/core": "workspace:*",
+    "@tracing/shared": "workspace:*",
+    "@tracing/browser-click": "workspace:*",
+    "@tracing/browser-resource": "workspace:*",
+    "@tracing/browser-sender": "workspace:*",
+    "@tracing/browser-page": "workspace:*",
+    "@tracing/browser-scroll": "workspace:*",
+    "@tracing/browser-http-axios": "workspace:*"
   }
 }
