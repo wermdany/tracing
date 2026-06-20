@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test browser-http-axios output modules should browser-http-axios output modules 1`] = `
+[
+  "BrowserHttpAxiosPlugin",
+  "defaultGenRecord",
+  "defaultSanitize",
+  "defaultClassifyError",
+  "defineBrowserHttpAxiosConfig",
+  "BrowserHttpRequestEvent",
+]
+`;

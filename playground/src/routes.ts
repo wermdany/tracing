@@ -44,5 +44,10 @@ export const routes: RouteItem[] = [
     key: "/browser-scroll",
     label: "滚动停留时间（browser-scroll）",
     element: lazy(() => import("./pages/browser-scroll"))
+  },
+  {
+    key: "/browser-http-axios",
+    label: "Axios 监控（browser-http-axios）",
+    element: lazy(() => import("./pages/browser-http-axios"))
   }
 ];

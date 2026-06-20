@@ -1,21 +1,21 @@
 {
-  "name": "@tracing/browser-resource",
+  "name": "@tracing/browser-http-axios",
   "version": "0.0.4",
   "private": false,
   "lib": true,
-  "description": "@tracing/browser-resource",
+  "description": "Axios HTTP request monitoring plugin for tracing SDK",
   "main": "index.js",
-  "module": "dist/browser-resource.esm-bundler.js",
-  "types": "dist/browser-resource.d.ts",
+  "module": "dist/browser-http-axios.esm-bundler.js",
+  "types": "dist/browser-http-axios.d.ts",
   "sideEffects": false,
   "author": "wermdany <https://github.com/wermdany>",
-  "license": "MIT",
+  "license": "ISC",
   "files": [
     "dist",
     "index.js"
   ],
   "buildOptions": {
-    "name": "TracingBrowserResource",
+    "name": "BrowserHttpAxios",
     "formats": [
       "esm-bundler",
       "esm-browser",
@@ -26,22 +26,28 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wermdany/tracing.git",
-    "directory": "packages/browser-resource"
+    "directory": "packages/browser-http-axios"
   },
   "bugs": {
     "url": "https://github.com/wermdany/tracing/issues"
   },
-  "homepage": "https://github.com/wermdany/tracing/tree/master/packages/browser-resource#readme",
+  "homepage": "https://github.com/wermdany/tracing/tree/master/packages/browser-http-axios#readme",
   "keywords": [
+    "collect",
     "tracker",
     "report",
-    "collect",
     "FE",
     "web",
-    "browser"
+    "axios"
   ],
   "dependencies": {
     "@tracing/core": "workspace:*",
     "@tracing/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "axios": "^1.6.8"
+  },
+  "peerDependencies": {
+    "axios": "^1.x"
   }
 }

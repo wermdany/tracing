@@ -41,7 +41,7 @@
     "browser"
   ],
   "dependencies": {
-    "@tracing/core": "0.0.4",
-    "@tracing/shared": "0.0.4"
+    "@tracing/core": "workspace:*",
+    "@tracing/shared": "workspace:*"
   }
 }

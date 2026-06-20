@@ -1,0 +1,19 @@
+{
+  "extends": "../../api-extractor.json",
+  "mainEntryPointFilePath": "./dist/packages/browser-http-axios/src/index.d.ts",
+  "dtsRollup": {
+    "publicTrimmedFilePath": "./dist/browser-http-axios.d.ts"
+  },
+  "compiler": {
+    "overrideTsconfig": {
+      "compilerOptions": {
+        "baseUrl": "packages/browser-http-axios/dist/",
+        "paths": {
+          "@tracing/*": ["packages/*/src"]
+        }
+      },
+      "include": ["global.d.ts", "packages/*/src/**/*.ts"],
+      "exclude": ["test-utils/*"]
+    }
+  }
+}
