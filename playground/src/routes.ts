@@ -59,5 +59,10 @@ export const routes: RouteItem[] = [
     key: "/browser-performance",
     label: "性能指标（browser-performance）",
     element: lazy(() => import("./pages/browser-performance"))
+  },
+  {
+    key: "/browser-expose",
+    label: "元素曝光率（browser-expose）",
+    element: lazy(() => import("./pages/browser-expose"))
   }
 ];

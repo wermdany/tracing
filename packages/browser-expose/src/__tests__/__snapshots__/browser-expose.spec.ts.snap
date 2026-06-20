@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`browser-expose-plugin should export stable modules 1`] = `
+{
+  "BrowserExposeEvent": "browser-expose",
+  "BrowserExposePlugin": [Function],
+  "DefaultExposeAttribute": "data-tracing-expose",
+  "defaultConfig": {
+    "attribute": "data-tracing-expose",
+    "genRecord": [Function],
+    "once": true,
+    "rootMargin": "0px",
+    "threshold": 0,
+    "useMutationObserver": true,
+  },
+  "defaultGenRecord": [Function],
+}
+`;

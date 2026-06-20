@@ -159,6 +159,15 @@ importers:
         specifier: workspace:*
         version: link:../shared
 
+  packages/browser-expose:
+    dependencies:
+      '@tracing/core':
+        specifier: workspace:*
+        version: link:../core
+      '@tracing/shared':
+        specifier: workspace:*
+        version: link:../shared
+
   packages/browser-http-axios:
     dependencies:
       '@tracing/core':
@@ -222,6 +231,9 @@ importers:
       '@tracing/browser-click':
         specifier: workspace:*
         version: link:../browser-click
+      '@tracing/browser-expose':
+        specifier: workspace:*
+        version: link:../browser-expose
       '@tracing/browser-http-axios':
         specifier: workspace:*
         version: link:../browser-http-axios

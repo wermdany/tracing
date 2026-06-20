@@ -22,6 +22,9 @@ import { BrowserHttpAxiosPlugin } from "@tracing/browser-http-axios";
 import type { PerformanceConfig } from "@tracing/browser-performance";
 import { BrowserPerformancePlugin } from "@tracing/browser-performance";
 
+import type { BrowserExposePluginConfig } from "@tracing/browser-expose";
+import { BrowserExposePlugin } from "@tracing/browser-expose";
+
 export interface NormalPluginConfig extends BuildPluginConfig, SenderPluginConfig {
   webClick: Partial<BrowserClickPluginConfig> | false;
   resource: Partial<ResourceConfig> | false;
@@ -29,6 +32,7 @@ export interface NormalPluginConfig extends BuildPluginConfig, SenderPluginConfi
   scroll: Partial<BrowserScrollPluginConfig> | false;
   axios: BrowserHttpAxiosPluginConfig | false;
   performance: Partial<PerformanceConfig> | false;
+  expose: Partial<BrowserExposePluginConfig> | false;
 }
 
 export function createNormalPlugin(config: Partial<NormalPluginConfig>) {
@@ -56,6 +60,10 @@ export function createNormalPlugin(config: Partial<NormalPluginConfig>) {
 
   if (config.performance !== false) {
     plugins.push(BrowserPerformancePlugin(config.performance));
+  }
+
+  if (config.expose !== false) {
+    plugins.push(BrowserExposePlugin(config.expose));
   }
 
   return plugins;
