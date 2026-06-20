@@ -9,7 +9,13 @@ import {
   getTitle,
   getUrl,
   getTimezoneOffset,
-  getViewportWidth
+  getViewportWidth,
+  getUserAgent,
+  getOsName,
+  getBrowserInfo,
+  getNetworkType,
+  getDeviceMemory,
+  getHardwareConcurrency
 } from "@tracing/shared";
 
 interface BuildFormatParams {
@@ -37,7 +43,13 @@ export function BuildPlugin(config?: Partial<BuildPluginConfig>): TracingPlugin 
     screenHeight: getScreenHeight,
     title: getTitle,
     url: getUrl,
-    timezoneOffset: getTimezoneOffset
+    timezoneOffset: getTimezoneOffset,
+    userAgent: getUserAgent,
+    os: getOsName,
+    browser: getBrowserInfo,
+    networkType: getNetworkType,
+    deviceMemory: getDeviceMemory,
+    hardwareConcurrency: getHardwareConcurrency
   };
 
   return {

@@ -55,6 +55,35 @@ describe("test browser env", () => {
   it("test getTitle", () => {
     expect(P.getTitle()).toBe("test element");
   });
+
+  it("test getUserAgent", () => {
+    expect(P.getUserAgent()).toBe(navigator.userAgent);
+  });
+
+  it("test getOsName", () => {
+    const os = P.getOsName();
+    expect(["macOS", "Windows", "Linux", "Android", "iOS", "ChromeOS", "Unknown"]).toContain(os);
+  });
+
+  it("test getBrowserInfo", () => {
+    const info = P.getBrowserInfo();
+    expect(typeof info).toBe("string");
+    expect(info.length).toBeGreaterThan(0);
+  });
+
+  it("test getNetworkType", () => {
+    expect(P.getNetworkType()).toBe("");
+  });
+
+  it("test getDeviceMemory", () => {
+    const mem = P.getDeviceMemory();
+    expect(typeof mem).toBe("number");
+  });
+
+  it("test getHardwareConcurrency", () => {
+    const cores = P.getHardwareConcurrency();
+    expect(typeof cores).toBe("number");
+  });
 });
 
 describe("test element", () => {
