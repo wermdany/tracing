@@ -126,8 +126,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(rollup@3.30.0)
       rollup-plugin-typescript2:
-        specifier: ^0.34.1
-        version: 0.34.1(rollup@3.30.0)(typescript@4.8.4)
+        specifier: ^0.37.0
+        version: 0.37.0(rollup@3.30.0)(typescript@4.8.4)
       semver:
         specifier: ^7.3.5
         version: 7.8.4
@@ -142,6 +142,15 @@ importers:
         version: 4.8.4
 
   packages/browser-click:
+    dependencies:
+      '@tracing/core':
+        specifier: workspace:*
+        version: link:../core
+      '@tracing/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/browser-error:
     dependencies:
       '@tracing/core':
         specifier: workspace:*
@@ -4003,8 +4012,8 @@ packages:
     peerDependencies:
       rollup: ^1.20.0 || ^2.0.0 || ^3.0.0
 
-  rollup-plugin-typescript2@0.34.1:
-    resolution: {integrity: sha512-P4cHLtGikESmqi1CA+tdMDUv8WbQV48mzPYt77TSTOPJpERyZ9TXdDgjSDix8Fkqce6soYz3+fa4lrC93IEkcw==}
+  rollup-plugin-typescript2@0.37.0:
+    resolution: {integrity: sha512-S1r/4Ufi13Yg/chPlh4iSHWq2Zs/sIAodW5SKUoCQfy/DEQhkS2XRFEtv+NRq3iBO4WHHfqKtDPOC5lJTYm7OQ==}
     peerDependencies:
       rollup: '>=1.26.3'
       typescript: '>=2.4.0'
@@ -9031,7 +9040,7 @@ snapshots:
       '@rollup/plugin-inject': 5.0.5(rollup@3.30.0)
       rollup: 3.30.0
 
-  rollup-plugin-typescript2@0.34.1(rollup@3.30.0)(typescript@4.8.4):
+  rollup-plugin-typescript2@0.37.0(rollup@3.30.0)(typescript@4.8.4):
     dependencies:
       '@rollup/pluginutils': 4.1.2
       find-cache-dir: 3.3.2

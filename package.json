@@ -84,7 +84,7 @@
     "prettier": "^2.5.1",
     "rollup": "^3.8.0",
     "rollup-plugin-polyfill-node": "^0.11.0",
-    "rollup-plugin-typescript2": "^0.34.1",
+    "rollup-plugin-typescript2": "^0.37.0",
     "semver": "^7.3.5",
     "ts-jest": "^29.0.3",
     "tslib": "^2.4.1",
