@@ -4,7 +4,7 @@
   "private": true,
   "description": "",
   "scripts": {
-    "setup": "pnpm install --unsafe-perm",
+    "setup": "pnpm install",
     "preinstall": "node ./scripts/preinstall.js",
     "postinstall": "husky install",
     "bootstrap": "esno ./scripts/bootstrap.ts",
