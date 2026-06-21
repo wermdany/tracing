@@ -34,3 +34,6 @@ jobs:
 
       - name: Running Test
         run: pnpm test:coverage
+
+      - name: Running Build
+        run: pnpm build --t
